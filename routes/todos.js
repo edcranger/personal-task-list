@@ -1,14 +1,27 @@
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
+const { check } = require("express-validator");
+const { protect } = require("../middleware/auth");
 
 const {
   getTodos,
-  newTodo,
+  createTodo,
   deleteTodo,
   updateTodo,
 } = require("../controllers/todos");
 
-router.route("/:id").put(updateTodo).delete(deleteTodo);
+router.route("/:todoId").put(protect, updateTodo).delete(protect, deleteTodo);
 
-router.route("/").get(getTodos).post(newTodo);
+router
+  .route("/")
+  .get(protect, getTodos)
+  .post(
+    protect,
+    [
+      check("title", "Please enter a title.").not().isEmpty(),
+      check("content", "Please enter a content.").not().isEmpty(),
+    ],
+
+    createTodo
+  );
 
 module.exports = router;
