@@ -114,11 +114,23 @@ export const NavLink = styled(Link)`
     width: 100%;
     display: table;
 
+    .navIcon {
+      display: none;
+    }
+
     :hover {
       background-color: #fff;
       color: #242424;
       border-radius: 0;
       border-bottom: none;
     }
+  }
+`;
+
+export const NavMobileLink = styled.div`
+  display: none;
+
+  @media screen and (max-width: 640px) {
+    display: inline;
   }
 `;

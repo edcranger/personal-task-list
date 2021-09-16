@@ -20,8 +20,10 @@ exports.getTodos = async (req, res) => {
 //@desc     Get all todos in the database
 //@access   Private
 exports.getTodo = async (req, res) => {
+  const taskColumnId = req.params.taskColumnId;
+
   try {
-    const todo = await Todos.find({ user: req.user });
+    const todo = await Todos.find({ user: req.user, taskColumn: taskColumnId });
 
     res.status(200).json({ success: true, count: todo.length, todo });
   } catch (err) {
@@ -33,7 +35,7 @@ exports.getTodo = async (req, res) => {
 //@desc     Post a todo
 //@access   Private
 exports.createTodo = async (req, res) => {
-  const task = req.params.taskId;
+  const taskColumnId = req.params.taskColumnId;
   const userId = req.user;
 
   const errors = validationResult(req);
@@ -42,7 +44,7 @@ exports.createTodo = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { title, content } = req.body;
+  const { title, content, columnIndex, task } = req.body;
 
   /*   if (!title || !content)
     return res
@@ -59,9 +61,11 @@ exports.createTodo = async (req, res) => {
 
     todo = await Todos.create({
       user: userId,
+      taskColumn: taskColumnId,
       task,
       title,
       content,
+      columnIndex,
     });
 
     res.status(200).json({ success: true, todo });

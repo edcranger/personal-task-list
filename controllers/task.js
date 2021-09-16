@@ -5,7 +5,7 @@ const Tasks = require("../models/Tasks");
 //@access   Private
 exports.getTasks = async (req, res) => {
   try {
-    const task = await Tasks.find().populate("todos");
+    const task = await Tasks.find().populate("task-columns");
 
     res.status(200).json({ success: true, task, count: task.length });
   } catch (err) {

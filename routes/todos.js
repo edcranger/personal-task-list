@@ -3,7 +3,7 @@ const { check } = require("express-validator");
 const { protect } = require("../middleware/auth");
 
 const {
-  getTodos,
+  getTodo,
   createTodo,
   deleteTodo,
   updateTodo,
@@ -13,7 +13,7 @@ router.route("/:todoId").put(protect, updateTodo).delete(protect, deleteTodo);
 
 router
   .route("/")
-  .get(protect, getTodos)
+  .get(protect, getTodo)
   .post(
     protect,
     [

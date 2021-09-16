@@ -2,9 +2,14 @@
 export const ADD_TASK = "ADD_TASK";
 export const UPDATE_TASK = "UPDATE_TASK";
 export const DELETE_TASK = "DELETE_TASK";
-export const FILTER_TASK = "ADD_TASK";
+export const FILTER_TASKS = "FILTER_TASKS";
+export const CLEAR_FILTER_TASKS = "CLEAR_FILTER_TASKS";
 export const SET_CURRENT_TASK = "SET_CURRENT_TASK";
 export const CLEAR_CURRENT_TASK = "CLEAR_CURRENT_TASK";
+
+//utilities
+export const SET_IS_EDITING = "SET_IS_EDITING";
+export const SHOW_MODAL = "SHOW_MODAL";
 
 //Todos
 export const ADD_TODO = "ADD_TODO";

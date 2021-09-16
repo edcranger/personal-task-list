@@ -4,7 +4,7 @@ const TaskSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
     },
     taskTitle: {
       type: String,
@@ -36,8 +36,8 @@ const TaskSchema = mongoose.Schema(
 );
 
 //reverse populate with virtuals
-TaskSchema.virtual("todos", {
-  ref: "Todo",
+TaskSchema.virtual("task-columns", {
+  ref: "Task-Column",
   localField: "_id",
   foreignField: "task",
   justOne: false,

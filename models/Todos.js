@@ -3,11 +3,16 @@ const mongoose = require("mongoose");
 const TodoSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+    ref: "User",
   },
   task: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "tasks",
+    ref: "Task",
+    required: true,
+  },
+  taskColumn: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Task-Column",
     required: true,
   },
   title: {
@@ -30,6 +35,10 @@ const TodoSchema = mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  columnIndex: {
+    type: Number,
+    required: true,
   },
 });
 

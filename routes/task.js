@@ -10,9 +10,10 @@ const {
 } = require("../controllers/task");
 
 //Include other resource routers
-const todosRouter = require("./todos");
+const taskColumnRouter = require("../routes/taskColumn");
 
-router.use("/:taskId/todos", todosRouter);
+//import router for task-column so that taskId can be used to that route
+router.use("/:taskId/task-column", taskColumnRouter);
 
 router.route("/:taskId").put(protect, updateTask).delete(protect, deleteTask);
 

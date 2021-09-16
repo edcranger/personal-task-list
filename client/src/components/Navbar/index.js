@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -16,16 +16,16 @@ import {
   NavItem,
   NavLink,
   MenuIcon,
+  NavMobileLink,
 } from "./NavbarElements";
 
 const Navbar = ({ title }) => {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(false);
+  /*   const [button, setButton] = useState(false); */
 
   const handleClick = () => setClick(!click);
-  const closeMobileMenu = () => setClick(false);
 
-  const showButton = () => {
+  /*   const showButton = () => {
     window.innerWidth <= 960 ? setButton(false) : setButton(true);
   };
 
@@ -34,7 +34,7 @@ const Navbar = ({ title }) => {
   }, []);
 
   window.addEventListener("resize", showButton);
-
+ */
   return (
     <Wrapper>
       <Content>
@@ -50,12 +50,14 @@ const Navbar = ({ title }) => {
         <NavMenu active={click ? true : false}>
           <NavItem>
             <NavLink to="/">
-              <RiDashboardFill />
+              <RiDashboardFill className="navIcon" />
+              <NavMobileLink>Dashboard</NavMobileLink>
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink to="/tasks">
-              <BiUserCircle />
+              <BiUserCircle className="navIcon" />
+              <NavMobileLink>Account</NavMobileLink>
             </NavLink>
           </NavItem>
         </NavMenu>

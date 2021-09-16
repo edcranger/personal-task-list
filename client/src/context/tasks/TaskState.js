@@ -1,10 +1,20 @@
 import React, { useReducer } from "react";
-import uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import TaskContext from "./taskContext";
 import taskReducer from "./taskReducer";
 
-import { ADD_TASK, UPDATE_TASK, DELETE_TASK, FILTER_TASK } from "../types";
+import {
+  ADD_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+  SET_CURRENT_TASK,
+  CLEAR_CURRENT_TASK,
+  FILTER_TASKS,
+  CLEAR_FILTER_TASKS,
+  SET_IS_EDITING,
+  SHOW_MODAL,
+} from "../types";
 
 const TaskState = (props) => {
   const initialState = {
@@ -34,24 +44,79 @@ const TaskState = (props) => {
         date: "2021-09-05T16:00:11.627+00:00",
       },
     ],
+    currentTask: null,
+    isEditing: false,
+    showModal: false,
+    filtered: null,
   };
 
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
   //Add Task
+  const addTask = (task) => {
+    task._id = uuidv4();
 
-  //Set current task
-
-  //Clear current task
-
-  //Delete Task
+    dispatch({ type: ADD_TASK, payload: task });
+  };
 
   //Update Task
+  const updateTask = (task) => {
+    dispatch({ type: UPDATE_TASK, payload: task });
+  };
+
+  //Delete Task
+  const deleteTask = (id) => {
+    dispatch({ type: DELETE_TASK, payload: id });
+  };
+
+  //Set current task
+  const setCurrentTask = (task) => {
+    dispatch({ type: SET_CURRENT_TASK, payload: task });
+  };
+
+  //Clear current task
+  const clearCurrentTask = () => {
+    dispatch({ type: CLEAR_CURRENT_TASK });
+  };
 
   //Filter Task
+  const filterTasks = (text) => {
+    dispatch({ type: FILTER_TASKS, payload: text });
+  };
+
+  const clearFilterTasks = () => {
+    dispatch({ type: CLEAR_FILTER_TASKS });
+  };
+
+  //Showing modal
+  const openCloseModal = (showModal) => {
+    dispatch({ type: SHOW_MODAL, payload: showModal });
+  };
+
+  //isEditing?
+  const userEditing = (editing) => {
+    dispatch({ type: SET_IS_EDITING, payload: editing });
+  };
 
   return (
-    <TaskContext.Provider value={{ tasks: state.tasks }}>
+    <TaskContext.Provider
+      value={{
+        tasks: state.tasks,
+        currentTask: state.currentTask,
+        isEditing: state.isEditing,
+        showModal: state.showModal,
+        filtered: state.filtered,
+        addTask,
+        deleteTask,
+        setCurrentTask,
+        clearCurrentTask,
+        filterTasks,
+        clearFilterTasks,
+        userEditing,
+        updateTask,
+        openCloseModal,
+      }}
+    >
       {props.children}
     </TaskContext.Provider>
   );

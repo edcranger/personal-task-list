@@ -1,144 +1,30 @@
 import React from "react";
-import Task from "../components/Task";
 
 //styles
 import {
-  Wrapper,
-  Content,
+  HomeWrapper,
   SideContent,
   MainContent,
-} from "../components/PageLayout/DashboardGridElements";
+} from "../components/PageLayout/PageLayoutElements";
+
+//components
+import Tasks from "../components/Task/Tasks";
+import Avatar from "../components/Avatar";
+import Collapse from "../components/Collapse";
+import TaskFilter from "../components/Task/TaskFilter";
 
 const Home = () => {
   return (
-    <Wrapper>
-      <Content>
-        <SideContent>
-          <ul>
-            <li>Eds</li>
-            <li>Eds</li>
-            <li>Eds</li>
-          </ul>
-        </SideContent>
-        <MainContent>
-          <Task />
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-            repellendus illum eligendi et sequi possimus quae beatae aliquid!
-            Quasi delectus rem quos voluptas temporibus deleniti corporis,
-            voluptate quae minima est.
-          </p>
-        </MainContent>
-      </Content>
-    </Wrapper>
+    <HomeWrapper>
+      <SideContent>
+        <Avatar />
+        <Collapse />
+      </SideContent>
+      <MainContent>
+        <TaskFilter />
+        <Tasks />
+      </MainContent>
+    </HomeWrapper>
   );
 };
 

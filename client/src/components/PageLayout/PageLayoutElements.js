@@ -1,14 +1,47 @@
 import styled from "styled-components";
 
 export const PageLayout = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: 80px 1fr;
 `;
 
-export const PageContent = styled.div`
-  flex: 1;
+export const PageMainContent = styled.div`
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+`;
+
+export const HomeWrapper = styled.div`
   width: 100%;
+  max-width: var(--maxWidth);
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 300px 2fr;
+  overflow: hidden;
+
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+export const SideContent = styled.div`
+  padding: 10px 15px;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MainContent = styled.div`
+  padding: 10px 15px;
+  width: 100%;
+  background: var(--white);
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

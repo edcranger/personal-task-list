@@ -5,13 +5,12 @@ import PageNotFound from "./pages/PageNotFound";
 
 //components
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer/";
 
 //styles
 import { GlobalStyles } from "./GlobalStyles";
 import {
   PageLayout,
-  PageContent,
+  PageMainContent,
 } from "./components/PageLayout/PageLayoutElements";
 
 //context
@@ -23,16 +22,15 @@ const App = () => {
       <Router>
         <PageLayout>
           <Navbar />
-          <PageContent>
+          <PageMainContent>
             <Switch>
               <Route exact path="/" component={Home}></Route>
               <Route path="*" component={PageNotFound}></Route>
             </Switch>
-          </PageContent>
-          <Footer />
-          <GlobalStyles />
+          </PageMainContent>
         </PageLayout>
       </Router>
+      <GlobalStyles />
     </TaskState>
   );
 };

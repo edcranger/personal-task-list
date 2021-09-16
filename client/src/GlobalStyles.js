@@ -16,10 +16,12 @@ export const GlobalStyles = createGlobalStyle`
         box-sizing: border-box;
         font-family: 'Sora', sans-serif;
     }
-
+    
     body {
         margin: 0;
         padding: 0;
+        background-color:  #ffffff;
+         
 
         h1 {
             font-size: 2rem;
