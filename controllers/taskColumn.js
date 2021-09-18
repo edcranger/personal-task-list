@@ -25,8 +25,6 @@ exports.getTaskColumns = async (req, res) => {
   try {
     const taskColumn = await TaskColumns.find({ user: req.user, task: taskId });
 
-    console.log(taskColumn);
-
     res
       .status(200)
       .json({ success: true, count: taskColumn.length, taskColumn });

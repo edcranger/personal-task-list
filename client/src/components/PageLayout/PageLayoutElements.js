@@ -13,6 +13,8 @@ export const PageMainContent = styled.div`
   overflow: hidden;
 `;
 
+/* ====================Home Page Design=========================== */
+
 export const HomeWrapper = styled.div`
   width: 100%;
   max-width: var(--maxWidth);
@@ -44,4 +46,13 @@ export const MainContent = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+`;
+
+/* ================Task Page Design==================== */
+
+export const TaskWrapper = styled.section`
+  width: 100%;
+  max-width: var(--maxWidth);
+  margin: 0 auto;
+  padding: 15px 10px;
 `;

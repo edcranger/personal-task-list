@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
@@ -18,6 +19,7 @@ import {
 
 const TaskItems = ({ task }) => {
   const taskContext = useContext(TaskContext);
+  const history = useHistory();
   const { deleteTask, setCurrentTask, clearCurrentTask, userEditing } =
     taskContext;
 
@@ -33,8 +35,12 @@ const TaskItems = ({ task }) => {
     userEditing(true);
   };
 
+  const handleNav = () => {
+    history.push(`/task/${task._id}`);
+  };
+
   return (
-    <TaskItemWrapper>
+    <TaskItemWrapper onClick={handleNav}>
       <TaskItemHeader>
         <MdModeEdit className="headerBtn" onClick={handleEdit} />
         <BsTrash2Fill className="headerBtn" onClick={handleDelete} />

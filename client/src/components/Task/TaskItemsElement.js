@@ -13,6 +13,7 @@ export const TaskItemWrapper = styled.div`
   :hover {
     transform: scale(1.05);
     z-index: 999;
+    cursor: pointer;
   }
 `;
 
