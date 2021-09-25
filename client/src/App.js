@@ -19,24 +19,27 @@ import {
 //context
 import TaskState from "./context/tasks/TaskState";
 import TaskColumnState from "./context/taskColumn/taskColumnState";
+import TodoState from "./context/todos/TodoState";
 
 const App = () => {
   return (
     <TaskState>
       <TaskColumnState>
-        <Router>
-          <PageLayout>
-            <Navbar />
-            <PageMainContent>
-              <Switch>
-                <Route exact path="/" component={Home}></Route>
-                <Route path="/task/:taskId" component={Task}></Route>
-                <Route path="*" component={PageNotFound}></Route>
-              </Switch>
-            </PageMainContent>
-          </PageLayout>
-        </Router>
-        <GlobalStyles />
+        <TodoState>
+          <Router>
+            <PageLayout>
+              <Navbar />
+              <PageMainContent>
+                <Switch>
+                  <Route exact path="/" component={Home}></Route>
+                  <Route path="/task/:taskId" component={Task}></Route>
+                  <Route path="*" component={PageNotFound}></Route>
+                </Switch>
+              </PageMainContent>
+            </PageLayout>
+          </Router>
+          <GlobalStyles />
+        </TodoState>
       </TaskColumnState>
     </TaskState>
   );

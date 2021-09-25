@@ -46,7 +46,6 @@ const TaskState = (props) => {
     ],
     currentTask: null,
     isEditing: false,
-    showModal: false,
     filtered: null,
   };
 
@@ -88,11 +87,6 @@ const TaskState = (props) => {
     dispatch({ type: CLEAR_FILTER_TASKS });
   };
 
-  //Showing modal
-  const openCloseModal = (showModal) => {
-    dispatch({ type: SHOW_MODAL, payload: showModal });
-  };
-
   //isEditing?
   const userEditing = (editing) => {
     dispatch({ type: SET_IS_EDITING, payload: editing });
@@ -104,7 +98,6 @@ const TaskState = (props) => {
         tasks: state.tasks,
         currentTask: state.currentTask,
         isEditing: state.isEditing,
-        showModal: state.showModal,
         filtered: state.filtered,
         addTask,
         deleteTask,
@@ -114,7 +107,6 @@ const TaskState = (props) => {
         clearFilterTasks,
         userEditing,
         updateTask,
-        openCloseModal,
       }}
     >
       {props.children}

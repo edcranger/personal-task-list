@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import TaskContext from "../../context/tasks/taskContext";
 
 import TaskItem from "./TaskItems";
@@ -11,9 +11,11 @@ import TaskForm from "./TaskForm";
 const Tasks = () => {
   const taskContext = useContext(TaskContext);
 
-  const { tasks, openCloseModal, filtered } = taskContext;
+  const [showModal, setShowModal] = useState(false);
 
-  const handleClick = () => openCloseModal(true);
+  const { tasks, filtered } = taskContext;
+
+  const handleClick = () => setShowModal(true);
 
   if (tasks.length === 0) {
     return <h1>Please Add Task</h1>;
@@ -22,13 +24,22 @@ const Tasks = () => {
   return (
     <TasksWrapper>
       {filtered !== null
-        ? filtered.map((task) => <TaskItem key={task._id} task={task} />)
-        : tasks.map((task) => <TaskItem key={task._id} task={task} />)}
+        ? filtered.map((task) => (
+            <TaskItem key={task._id} task={task} setShowModal={setShowModal} />
+          ))
+        : tasks.map((task) => (
+            <TaskItem key={task._id} task={task} setShowModal={setShowModal} />
+          ))}
       <AddTask>
         <AddBtn onClick={handleClick} />
       </AddTask>
 
-      <Modal>
+      <Modal
+        opacity="0.8"
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title="Add task"
+      >
         <TaskForm />
       </Modal>
     </TasksWrapper>

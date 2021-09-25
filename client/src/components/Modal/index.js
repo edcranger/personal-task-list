@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useContext, useEffect } from "react";
 
 import { useSpring, animated } from "react-spring";
 import { FaTimes } from "react-icons/fa";
@@ -9,12 +9,12 @@ import { Background, Wrapper, ModalHeader } from "./ModalElements";
 //context
 import TaskContext from "../../context/tasks/taskContext";
 
-const Modal = ({ children }) => {
+const Modal = ({ title, opacity, children, showModal, setShowModal }) => {
   const modalRef = useRef();
 
   const taskContext = useContext(TaskContext);
 
-  const { isEditing, showModal, openCloseModal, userEditing } = taskContext;
+  const { isEditing, userEditing } = taskContext;
 
   const animation = useSpring({
     config: {
@@ -26,31 +26,35 @@ const Modal = ({ children }) => {
 
   const closeModal = (e) => {
     if (modalRef.current === e.target) {
-      openCloseModal(false);
+      setShowModal(false);
       userEditing(false);
     }
   };
 
   const close = () => {
-    openCloseModal(false);
+    setShowModal(false);
     userEditing(false);
   };
 
+  useEffect(() => {
+    return () => {};
+  }, []);
+
   return (
     <>
-      {showModal || isEditing ? (
-        <Background ref={modalRef} onMouseDown={closeModal}>
+      {showModal && (
+        <Background ref={modalRef} opacity={opacity} onMouseDown={closeModal}>
           <animated.div style={animation}>
             <Wrapper>
               <ModalHeader>
-                <h3>{isEditing ? "Edit Task" : "Add Task"}</h3>
+                <h3>{isEditing ? "Edit Task" : title}</h3>
                 <FaTimes className="closeBtn" onClick={close} />
               </ModalHeader>
               {children}
             </Wrapper>
           </animated.div>
         </Background>
-      ) : null}
+      )}
     </>
   );
 };

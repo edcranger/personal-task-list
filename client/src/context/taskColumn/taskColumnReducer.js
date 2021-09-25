@@ -3,6 +3,8 @@ import {
   ADD_TASKCOLUMN,
   UPDATE_TASKCOLUMN,
   DELETE_TASKCOLUMN,
+  ADD_TODO,
+  DELETE_TODO,
   IS_LOADING,
 } from "../types";
 
@@ -17,8 +19,20 @@ const taskReducer = (state, action) => {
         isLoading: false,
       };
 
+    case ADD_TODO:
+      return { ...state };
+
+    case DELETE_TODO:
+      const newTaskColumns = state.currentTaskColumns.map((taskCol) =>
+        taskCol._id === action.payload._id ? action.payload : taskCol
+      );
+
+      return { ...state, currentTaskColumns: newTaskColumns };
     case IS_LOADING:
       return { ...state, isLoading: true };
+
+    default:
+      return state;
   }
 };
 

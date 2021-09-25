@@ -17,7 +17,7 @@ import {
   TaskItemFooter,
 } from "./TaskItemsElement";
 
-const TaskItems = ({ task }) => {
+const TaskItems = ({ task, setShowModal }) => {
   const taskContext = useContext(TaskContext);
   const history = useHistory();
   const { deleteTask, setCurrentTask, clearCurrentTask, userEditing } =
@@ -32,6 +32,7 @@ const TaskItems = ({ task }) => {
 
   const handleEdit = () => {
     setCurrentTask(task);
+    setShowModal(true);
     userEditing(true);
   };
 
@@ -40,12 +41,12 @@ const TaskItems = ({ task }) => {
   };
 
   return (
-    <TaskItemWrapper onClick={handleNav}>
+    <TaskItemWrapper>
       <TaskItemHeader>
         <MdModeEdit className="headerBtn" onClick={handleEdit} />
         <BsTrash2Fill className="headerBtn" onClick={handleDelete} />
       </TaskItemHeader>
-      <TaskItemContent>
+      <TaskItemContent onClick={handleNav}>
         <h3>{taskTitle}</h3>
         {description}
       </TaskItemContent>
