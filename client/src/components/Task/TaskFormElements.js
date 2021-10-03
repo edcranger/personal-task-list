@@ -15,6 +15,7 @@ export const TaskInput = styled.input`
   padding: 5px 15px;
   border-radius: 15px;
   font-size: var(--fontBig);
+  border: 1px solid var(--darkGrey);
 
   :focus {
     outline: none;

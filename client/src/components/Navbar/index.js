@@ -21,20 +21,9 @@ import {
 
 const Navbar = ({ title }) => {
   const [click, setClick] = useState(false);
-  /*   const [button, setButton] = useState(false); */
 
   const handleClick = () => setClick(!click);
 
-  /*   const showButton = () => {
-    window.innerWidth <= 960 ? setButton(false) : setButton(true);
-  };
-
-  useEffect(() => {
-    showButton();
-  }, []);
-
-  window.addEventListener("resize", showButton);
- */
   return (
     <Wrapper>
       <Content>
@@ -50,13 +39,13 @@ const Navbar = ({ title }) => {
         <NavMenu active={click ? true : false}>
           <NavItem>
             <NavLink to="/">
-              <RiDashboardFill className="navIcon" />
+              <RiDashboardFill className="navIcon" id="wew" />
               <NavMobileLink>Dashboard</NavMobileLink>
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink to="/tasks">
-              <BiUserCircle className="navIcon" />
+              <BiUserCircle className="navIcon" id="wew" />
               <NavMobileLink>Account</NavMobileLink>
             </NavLink>
           </NavItem>

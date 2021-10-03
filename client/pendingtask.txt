@@ -1,0 +1,16 @@
+
+
+=======================Pending=========================
+
+
+
+
+
+======================Completed==================
+-Task column page - pending vertical scrolling function.
+-Task card- pending modal when deleting.
+-Close modal when done creating a task card
+-Add a task column functionality.
+-Form validation.
+-Add task button lost when all items are deleted.
+-Error when clicking navbar burger menu when the taskcolumn menu is being       shown. 

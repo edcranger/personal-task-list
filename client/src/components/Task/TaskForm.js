@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { taskSchema } from "../schema";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
@@ -8,24 +11,33 @@ import {
   TaskFormWrapper,
   TaskInput,
   TaskTextArea,
-  Button,
-  ClearBtn,
   CategoriesForm,
 } from "./TaskFormElements";
 
-const TaskForm = () => {
+import { ErrorContainer, Button } from "../PageLayout/UtilStyles";
+
+const TaskForm = ({ setShowModal, currTask }) => {
   const taskContext = useContext(TaskContext);
   const { addTask, updateTask, isEditing, currentTask } = taskContext;
+  const [taskData, setTaskData] = useState({});
 
-  const [taskData, setTaskData] = useState({
-    taskTitle: "",
-    description: "",
-    category: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(taskSchema),
   });
 
   useEffect(() => {
     if (isEditing) {
-      setTaskData(currentTask);
+      setTaskData(currTask);
+      reset({
+        taskTitle: taskData.taskTitle,
+        description: taskData.description,
+        category: taskData.category,
+      });
     }
   }, [isEditing, currentTask]);
 
@@ -39,46 +51,41 @@ const TaskForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmitForm = (data) => {
+    isEditing ? updateTask(taskData) : addTask(data);
 
-    if (isEditing) {
-      updateTask(taskData);
-    } else {
-      addTask(taskData);
-      console.log("created");
-    }
-
-    console.log(taskData);
-
-    setTaskData({ taskTitle: "", description: "", category: "" });
+    setShowModal(false);
   };
 
   const handleReset = () => {
     setTaskData({ taskTitle: "", description: "", category: "" });
   };
 
-  const { taskTitle, description, category } = taskData;
-
   return (
     <>
-      <TaskFormWrapper onSubmit={handleSubmit}>
+      <TaskFormWrapper onSubmit={handleSubmit(handleSubmitForm)}>
+        <ErrorContainer>
+          <p>{errors.taskTitle?.message}</p>
+          <p>{errors.description?.message}</p>
+          <p>{errors.category?.message}</p>
+        </ErrorContainer>
+
         <TaskInput
+          {...register("taskTitle")}
           type="text"
-          name="taskTitle"
+          defaultValue={taskData.taskTitle}
           placeholder="Task Name"
-          value={taskTitle}
           onChange={handleChange}
         />
         <TaskTextArea
-          name="description"
+          {...register("description")}
+          defaultValue={taskData.description}
           placeholder="Enter description."
-          value={description}
           onChange={handleChange}
         />
         <CategoriesForm
-          name="category"
-          value={category}
+          {...register("category")}
+          defaultValue={taskData.category}
           onChange={handleChange}
         >
           <option className="custom-option" value=""></option>
@@ -95,11 +102,34 @@ const TaskForm = () => {
 
         <div>
           {isEditing ? (
-            <Button type="submit">Update</Button>
+            <Button
+              type="submit"
+              rounded="10px"
+              border="none"
+              background="var(--darkGrey)"
+            >
+              Update
+            </Button>
           ) : (
             <>
-              <Button type="submit">Create</Button>
-              <ClearBtn onClick={handleReset}>Clear</ClearBtn>
+              <Button
+                rounded="5px"
+                border="none"
+                fontColor="var(--darkGrey)"
+                background="var(--success)"
+                type="submit"
+              >
+                Create
+              </Button>
+              <Button
+                rounded="5px"
+                border="none"
+                fontColor="var(--darkGrey)"
+                background="var(--warning)"
+                onClick={handleReset}
+              >
+                Clear
+              </Button>
             </>
           )}
         </div>

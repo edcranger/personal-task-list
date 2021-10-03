@@ -1,12 +1,9 @@
 import React from "react";
 
 //import styles
-import {
-  TodoContentWrapper,
-  TodoStatus,
-  TodoContents,
-  Button,
-} from "./TodoElements";
+import { TodoContentWrapper, TodoStatus, TodoContents } from "./TodoElements";
+
+import { Button } from "../PageLayout/UtilStyles";
 
 const TodoContent = ({ todo, handleDelete, setShowModal }) => {
   const deleteFxn = () => {
@@ -25,7 +22,14 @@ const TodoContent = ({ todo, handleDelete, setShowModal }) => {
 
       <div>
         <div>Date created: {todo.date}</div>
-        <Button type="danger" onClick={deleteFxn}>
+        <Button
+          background="var(--lightGrey)"
+          hoverFontColor="white"
+          hoverColor="var(--danger)"
+          border="none"
+          rounded="10px"
+          onClick={deleteFxn}
+        >
           Delete
         </Button>
       </div>

@@ -55,4 +55,10 @@ export const TaskWrapper = styled.section`
   max-width: var(--maxWidth);
   margin: 0 auto;
   padding: 15px 10px;
+
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

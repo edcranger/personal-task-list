@@ -19,10 +19,24 @@ const taskReducer = (state, action) => {
         isLoading: false,
       };
 
+    case ADD_TASKCOLUMN:
+      return {
+        ...state,
+        currentTaskColumns: [...state.currentTaskColumns, action.payload],
+      };
+
+    case DELETE_TASKCOLUMN:
+      return {
+        ...state,
+        currentTaskColumns: state.currentTaskColumns.filter(
+          (column) => column._id !== action.payload
+        ),
+      };
+
     case ADD_TODO:
       return { ...state };
 
-    case DELETE_TODO:
+    case UPDATE_TASKCOLUMN:
       const newTaskColumns = state.currentTaskColumns.map((taskCol) =>
         taskCol._id === action.payload._id ? action.payload : taskCol
       );

@@ -13,14 +13,14 @@ import {
   FILTER_TASKS,
   CLEAR_FILTER_TASKS,
   SET_IS_EDITING,
-  SHOW_MODAL,
+  GET_CURRENT_TASK,
 } from "../types";
 
 const TaskState = (props) => {
   const initialState = {
     tasks: [
       {
-        _id: 1,
+        _id: "1",
         taskTitle: "Kumain",
         description: "Masarap tlga ang ramen",
         complete: false,
@@ -28,7 +28,7 @@ const TaskState = (props) => {
         date: "2021-09-05T16:00:11.627+00:00",
       },
       {
-        _id: 2,
+        _id: "2",
         taskTitle: "Matulog",
         description: "Humilik kahit nahihirapn",
         complete: false,
@@ -36,7 +36,7 @@ const TaskState = (props) => {
         date: "2021-09-05T16:00:11.627+00:00",
       },
       {
-        _id: 3,
+        _id: "3",
         taskTitle: "Maglaro",
         description: "Valorant is the best",
         complete: false,
@@ -50,6 +50,11 @@ const TaskState = (props) => {
   };
 
   const [state, dispatch] = useReducer(taskReducer, initialState);
+
+  //Get Current Task
+  const getCurrentTask = (id) => {
+    dispatch({ type: GET_CURRENT_TASK, payload: id });
+  };
 
   //Add Task
   const addTask = (task) => {
@@ -95,10 +100,8 @@ const TaskState = (props) => {
   return (
     <TaskContext.Provider
       value={{
-        tasks: state.tasks,
-        currentTask: state.currentTask,
-        isEditing: state.isEditing,
-        filtered: state.filtered,
+        ...state,
+        getCurrentTask,
         addTask,
         deleteTask,
         setCurrentTask,

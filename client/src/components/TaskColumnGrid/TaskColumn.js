@@ -1,24 +1,24 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 //styles
 import {
   AddTodoBtn,
   AddTodoForm,
-  Btn,
   TaskColumnWrapper,
   Button,
-} from "./TaskColumnGrid";
+} from "./TaskColumnElements";
 
 //components
 import TodoCard from "../Todo/TodoCard";
 import Modal from "../Modal";
+import TodoContent from "../Todo/TodoContent";
+import PopupMenu from "../PopupMenu";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
-import TodoContent from "../Todo/TodoContent";
 
-const TaskColumn = ({ col }) => {
+const TaskColumn = ({ col, handler }) => {
   const [showAddTodo, setShowAddTodo] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -31,8 +31,7 @@ const TaskColumn = ({ col }) => {
     setShowAddTodo(true);
   };
 
-  useEffect(() => {}, []);
-
+  /*       Adding todo         */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,6 +55,9 @@ const TaskColumn = ({ col }) => {
     setShowAddTodo(false);
   };
 
+  /* ======================================== */
+
+  /*       Deleting of Todo         */
   const handleDelete = (id) => {
     let newCol = { ...col };
 
@@ -65,9 +67,12 @@ const TaskColumn = ({ col }) => {
 
     deleteTodoToColumn(newCol);
   };
+  /* ================================= */
 
   return (
     <TaskColumnWrapper>
+      <PopupMenu col={col} handler={handler} />
+
       <h3>{col.columnName}</h3>
       <div className="addButtonContainer">
         <AddTodoBtn onClick={handleShowAddTodo} />

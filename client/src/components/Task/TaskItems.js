@@ -1,8 +1,5 @@
-import React, { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-
-//context
-import TaskContext from "../../context/tasks/taskContext";
+import React from "react";
+import { useHistory } from "react-router-dom";
 
 //icons
 import { MdModeEdit } from "react-icons/md";
@@ -17,24 +14,10 @@ import {
   TaskItemFooter,
 } from "./TaskItemsElement";
 
-const TaskItems = ({ task, setShowModal }) => {
-  const taskContext = useContext(TaskContext);
+const TaskItems = ({ task, handler }) => {
   const history = useHistory();
-  const { deleteTask, setCurrentTask, clearCurrentTask, userEditing } =
-    taskContext;
 
-  const { taskTitle, description, status, _id } = task;
-
-  const handleDelete = () => {
-    deleteTask(_id);
-    clearCurrentTask();
-  };
-
-  const handleEdit = () => {
-    setCurrentTask(task);
-    setShowModal(true);
-    userEditing(true);
-  };
+  const { taskTitle, description, status } = task;
 
   const handleNav = () => {
     history.push(`/task/${task._id}`);
@@ -43,8 +26,14 @@ const TaskItems = ({ task, setShowModal }) => {
   return (
     <TaskItemWrapper>
       <TaskItemHeader>
-        <MdModeEdit className="headerBtn" onClick={handleEdit} />
-        <BsTrash2Fill className="headerBtn" onClick={handleDelete} />
+        <MdModeEdit
+          className="headerBtn"
+          onClick={() => handler({ type: "update", task })}
+        />
+        <BsTrash2Fill
+          className="headerBtn"
+          onClick={() => handler({ type: "delete", task })}
+        />
       </TaskItemHeader>
       <TaskItemContent onClick={handleNav}>
         <h3>{taskTitle}</h3>

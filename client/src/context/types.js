@@ -1,4 +1,5 @@
 //tasks
+export const GET_CURRENT_TASK = "GET_CURRENT_TASK";
 export const ADD_TASK = "ADD_TASK";
 export const UPDATE_TASK = "UPDATE_TASK";
 export const DELETE_TASK = "DELETE_TASK";
@@ -20,6 +21,8 @@ export const SHOW_MODAL = "SHOW_MODAL";
 
 //Todos
 export const ADD_TODO = "ADD_TODO";
+export const GET_ALL_TASK_CURRENT_TASKCOLUMN =
+  "GET_ALL_TASK_CURRENT_TASKCOLUMN";
 export const GET_TODO = "GET_TODO";
 export const UPDATE_TODO = "UPDATE_TODO";
 export const DELETE_TODO = "DELETE_TODO";

@@ -10,6 +10,10 @@ export const GlobalStyles = createGlobalStyle`
         --fontBig: 1.5rem;
         --fontMed: 1.2rem;
         --fontSmall: 1rem;
+        --primary: rgba(43, 59, 234);
+        --success: rgba(109, 211, 99);
+        --warning: rgba(245, 181, 18);
+        --danger : rgba(219, 37, 61);
     }
 
     * {
