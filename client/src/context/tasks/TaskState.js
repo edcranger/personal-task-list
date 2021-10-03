@@ -4,6 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import TaskContext from "./taskContext";
 import taskReducer from "./taskReducer";
 
+//dumy data
+import { taskColumns } from "../../data/data";
+
 import {
   ADD_TASK,
   UPDATE_TASK,
@@ -25,6 +28,7 @@ const TaskState = (props) => {
         description: "Masarap tlga ang ramen",
         complete: false,
         status: "pending",
+        category: "Todo",
         date: "2021-09-05T16:00:11.627+00:00",
       },
       {
@@ -33,6 +37,7 @@ const TaskState = (props) => {
         description: "Humilik kahit nahihirapn",
         complete: false,
         status: "pending",
+        category: "Todo",
         date: "2021-09-05T16:00:11.627+00:00",
       },
       {
@@ -41,6 +46,7 @@ const TaskState = (props) => {
         description: "Valorant is the best",
         complete: false,
         status: "pending",
+        category: "Todo",
         date: "2021-09-05T16:00:11.627+00:00",
       },
     ],

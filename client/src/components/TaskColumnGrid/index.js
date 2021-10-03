@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -19,7 +20,7 @@ import Modal from "../Modal";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
-import TaskContext from "../../context/tasks/taskContext";
+
 import TaskColumnForm from "./TaskColumnForm";
 import { ErrorContainer } from "../PageLayout/UtilStyles";
 
@@ -85,12 +86,18 @@ const TaskColumnGrid = () => {
     setShowModal(false);
   };
 
+  const onDragEnd = (result) => {
+    console.log(result);
+  };
+
   if (!currentTaskColumns) return <h1>Loading....</h1>;
   return (
     <Wrapper>
-      {currentTaskColumns.map((col) => (
-        <TaskColumn key={col._id} col={col} handler={handler}></TaskColumn>
-      ))}
+      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+        {currentTaskColumns.map((col) => (
+          <TaskColumn key={col._id} col={col} handler={handler}></TaskColumn>
+        ))}
+      </DragDropContext>
 
       <BtnContainer>
         <AddBtn onClick={() => handler({ type: "add" })} />

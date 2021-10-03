@@ -34,9 +34,9 @@ const TaskForm = ({ setShowModal, currTask }) => {
     if (isEditing) {
       setTaskData(currTask);
       reset({
-        taskTitle: taskData.taskTitle,
-        description: taskData.description,
-        category: taskData.category,
+        taskTitle: currTask.taskTitle,
+        description: currTask.description,
+        category: currTask.category,
       });
     }
   }, [isEditing, currentTask]);
