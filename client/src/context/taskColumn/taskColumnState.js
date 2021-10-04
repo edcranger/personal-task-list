@@ -11,6 +11,7 @@ import {
   ADD_TODO,
   DELETE_TODO,
   IS_LOADING,
+  UPDATE_ALL_TASKCOLUMN,
 } from "../types";
 
 //Context and reducers
@@ -20,7 +21,7 @@ import TaskColumnContext from "./taskColumnContext";
 const TaskColumnState = ({ children }) => {
   const initialState = {
     taskColumns,
-    currentTaskColumn: null,
+    currentTaskColumns: null,
     isLoading: false,
   };
 
@@ -36,7 +37,12 @@ const TaskColumnState = ({ children }) => {
   };
 
   const updateTaskColumn = (col) => {
+    console.log(col);
     dispatch({ type: UPDATE_TASKCOLUMN, payload: col });
+  };
+
+  const updateAllTaskColumns = (cols) => {
+    dispatch({ type: UPDATE_ALL_TASKCOLUMN, payload: cols });
   };
 
   const deleteTaskColumn = (id) => {
@@ -61,6 +67,7 @@ const TaskColumnState = ({ children }) => {
         deleteTaskColumn,
         addTodoToColumn,
         deleteTodoToColumn,
+        updateAllTaskColumns,
       }}
     >
       {children}

@@ -56,7 +56,7 @@ const taskColumns = [
       },
     ],
   },
-  {
+  /*   {
     _id: "123123141234678455456",
     task: "1",
     user: "1235f02345345345",
@@ -79,7 +79,7 @@ const taskColumns = [
     category: "Todo",
     todos: [],
     columnName: "Edited",
-  },
+  }, */
   {
     _id: "15634564574",
     task: "2",

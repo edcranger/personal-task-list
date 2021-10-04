@@ -2,6 +2,7 @@ import {
   GET_ALL_TASKCOLUMNS,
   ADD_TASKCOLUMN,
   UPDATE_TASKCOLUMN,
+  UPDATE_ALL_TASKCOLUMN,
   DELETE_TASKCOLUMN,
   ADD_TODO,
   DELETE_TODO,
@@ -42,6 +43,21 @@ const taskReducer = (state, action) => {
       );
 
       return { ...state, currentTaskColumns: newTaskColumns };
+
+    case UPDATE_ALL_TASKCOLUMN:
+      const wew = [...state.taskColumns];
+
+      action.payload.cols.forEach((col) => {
+        const ind = wew.findIndex((ew) => ew._id === col._id);
+        wew.splice(ind, 1, col);
+      });
+
+      return {
+        ...state,
+        taskColumns: wew,
+        currentTaskColumns: action.payload.cols,
+      };
+
     case IS_LOADING:
       return { ...state, isLoading: true };
 

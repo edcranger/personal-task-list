@@ -39,6 +39,7 @@ const TaskColumnGrid = () => {
     addTaskColumn,
     updateTaskColumn,
     deleteTaskColumn,
+    updateAllTaskColumns,
   } = useContext(TaskColumnContext);
 
   useEffect(() => {
@@ -87,16 +88,55 @@ const TaskColumnGrid = () => {
   };
 
   const onDragEnd = (result) => {
-    console.log(result);
+    const newColumn = [...currentTaskColumns];
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = newColumn.find(
+        (col) => col._id === source.droppableId
+      );
+      const destColumn = newColumn.find(
+        (dest) => dest._id === destination.droppableId
+      );
+      const sourceItems = [...sourceColumn.todos];
+
+      const destItems = [...destColumn.todos];
+      const [removed] = sourceItems.splice(source.index, 1);
+
+      destItems.splice(destination.index, 0, removed);
+
+      const newTaskColumns = newColumn
+        .map((col) =>
+          col._id === source.droppableId ? { ...col, todos: sourceItems } : col
+        )
+        .map((col2) =>
+          col2._id === destination.droppableId
+            ? { ...col2, todos: destItems }
+            : col2
+        )
+        .map((col3) => {
+          return {
+            ...col3,
+            todos: col3.todos.map((item, index) => {
+              return { ...item, index, column: col3._id };
+            }),
+          };
+        });
+
+      updateAllTaskColumns({ taskId: taskId, cols: newTaskColumns });
+    } else {
+    }
   };
 
   if (!currentTaskColumns) return <h1>Loading....</h1>;
   return (
     <Wrapper>
       <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-        {currentTaskColumns.map((col) => (
-          <TaskColumn key={col._id} col={col} handler={handler}></TaskColumn>
-        ))}
+        {currentTaskColumns.map((col) => {
+          return <TaskColumn key={col._id} col={col} handler={handler} />;
+        })}
       </DragDropContext>
 
       <BtnContainer>

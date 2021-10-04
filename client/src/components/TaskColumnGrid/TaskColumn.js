@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  Fragment,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -71,68 +77,95 @@ const TaskColumn = ({ col, handler }) => {
   /* ================================= */
 
   return (
-    <TaskColumnWrapper>
-      <PopupMenu col={col} handler={handler} />
+    <Droppable droppableId={col._id}>
+      {(provided, snapshot) => {
+        return (
+          <TaskColumnWrapper
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            <PopupMenu col={col} handler={handler} />
 
-      <h3>{col.columnName}</h3>
-      <div className="addButtonContainer">
-        <AddTodoBtn onClick={handleShowAddTodo} />
-      </div>
+            <h3>{col.columnName}</h3>
+            <div className="addButtonContainer">
+              <AddTodoBtn onClick={handleShowAddTodo} />
+            </div>
 
-      <div className="todoContainer">
-        {col.todos.length === 0 ? (
-          <div>Empty</div>
-        ) : (
-          col.todos.map((todo) => (
-            <TodoCard
-              key={todo._id}
-              todo={todo}
+            <div className="todoContainer">
+              {col.todos
+                .sort((a, b) => a.index - b.index)
+                .map((todo, index) => (
+                  <Draggable
+                    key={todo._id}
+                    draggableId={todo._id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => {
+                      return (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <TodoCard
+                            todo={todo}
+                            setShowModal={setShowModal}
+                            setCurrentTodo={setCurrentTodo}
+                          />
+                        </div>
+                      );
+                    }}
+                  </Draggable>
+                ))}
+            </div>
+
+            {showAddTodo && (
+              <AddTodoForm>
+                <input
+                  type="text"
+                  placeholder="Add Todo"
+                  value={todoTitle}
+                  onChange={(e) => setTodoTitle(e.target.value)}
+                />
+
+                <div className="formButtonContainer">
+                  <Button
+                    border="none"
+                    fontSize="1rem"
+                    hoverColor="yellow"
+                    onClick={handleSubmit}
+                  >
+                    Add
+                  </Button>
+
+                  <Button
+                    border="none"
+                    fontSize="1rem"
+                    hoverColor="yellow"
+                    onClick={() => setShowAddTodo(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </AddTodoForm>
+            )}
+
+            <Modal
+              opacity="0.8"
+              showModal={showModal}
               setShowModal={setShowModal}
-              setCurrentTodo={setCurrentTodo}
-            />
-          ))
-        )}
-      </div>
-
-      {showAddTodo && (
-        <AddTodoForm>
-          <input
-            type="text"
-            placeholder="Add Todo"
-            value={todoTitle}
-            onChange={(e) => setTodoTitle(e.target.value)}
-          />
-
-          <div className="formButtonContainer">
-            <Button
-              border="none"
-              fontSize="1rem"
-              hoverColor="yellow"
-              onClick={handleSubmit}
             >
-              Add
-            </Button>
-
-            <Button
-              border="none"
-              fontSize="1rem"
-              hoverColor="yellow"
-              onClick={() => setShowAddTodo(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </AddTodoForm>
-      )}
-
-      <Modal opacity="0.8" showModal={showModal} setShowModal={setShowModal}>
-        <TodoContent
-          todo={currentTodo}
-          handleDelete={handleDelete}
-          setShowModal={setShowModal}
-        />
-      </Modal>
-    </TaskColumnWrapper>
+              <TodoContent
+                todo={currentTodo}
+                handleDelete={handleDelete}
+                setShowModal={setShowModal}
+              />
+            </Modal>
+            {provided.placeholder}
+          </TaskColumnWrapper>
+        );
+      }}
+    </Droppable>
   );
 };
 
