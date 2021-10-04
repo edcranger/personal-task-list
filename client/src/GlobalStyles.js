@@ -14,6 +14,7 @@ export const GlobalStyles = createGlobalStyle`
         --success: rgba(109, 211, 99);
         --warning: rgba(245, 181, 18);
         --danger : rgba(219, 37, 61);
+        --lightBlue: rgba(191, 206, 255);
     }
 
     * {

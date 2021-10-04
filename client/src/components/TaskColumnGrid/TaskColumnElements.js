@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   display: grid;
   justify-content: center;
   align-content: center;
-  align-items: center;
+  align-items: start;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-gap: 15px;
   margin: 10px 0;
@@ -36,12 +36,6 @@ export const TaskColumnWrapper = styled.div`
     justify-content: end;
   }
 
-  div.todoContainer {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
-  }
-
   .taskColumnOptionIcon {
     justify-self: end;
     font-size: 23px;
@@ -51,6 +45,16 @@ export const TaskColumnWrapper = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+export const DroppableContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: ${({ isDraggingOver }) =>
+    isDraggingOver ? "var(--lightBlue)" : "white"};
 `;
 
 export const AddTodoBtn = styled(FcPlus)`

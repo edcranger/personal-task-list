@@ -13,6 +13,7 @@ import {
   AddTodoBtn,
   AddTodoForm,
   TaskColumnWrapper,
+  DroppableContainer,
   Button,
 } from "./TaskColumnElements";
 
@@ -77,21 +78,21 @@ const TaskColumn = ({ col, handler }) => {
   /* ================================= */
 
   return (
-    <Droppable droppableId={col._id}>
-      {(provided, snapshot) => {
-        return (
-          <TaskColumnWrapper
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            <PopupMenu col={col} handler={handler} />
+    <TaskColumnWrapper>
+      <PopupMenu col={col} handler={handler} />
 
-            <h3>{col.columnName}</h3>
-            <div className="addButtonContainer">
-              <AddTodoBtn onClick={handleShowAddTodo} />
-            </div>
-
-            <div className="todoContainer">
+      <h3>{col.columnName}</h3>
+      <div className="addButtonContainer">
+        <AddTodoBtn onClick={handleShowAddTodo} />
+      </div>
+      <Droppable droppableId={col._id}>
+        {(provided, snapshot) => {
+          return (
+            <DroppableContainer
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              {...snapshot}
+            >
               {col.todos
                 .sort((a, b) => a.index - b.index)
                 .map((todo, index) => (
@@ -117,55 +118,51 @@ const TaskColumn = ({ col, handler }) => {
                     }}
                   </Draggable>
                 ))}
-            </div>
+              {provided.placeholder}
+            </DroppableContainer>
+          );
+        }}
+      </Droppable>
 
-            {showAddTodo && (
-              <AddTodoForm>
-                <input
-                  type="text"
-                  placeholder="Add Todo"
-                  value={todoTitle}
-                  onChange={(e) => setTodoTitle(e.target.value)}
-                />
+      {showAddTodo && (
+        <AddTodoForm>
+          <input
+            type="text"
+            placeholder="Add Todo"
+            value={todoTitle}
+            onChange={(e) => setTodoTitle(e.target.value)}
+          />
 
-                <div className="formButtonContainer">
-                  <Button
-                    border="none"
-                    fontSize="1rem"
-                    hoverColor="yellow"
-                    onClick={handleSubmit}
-                  >
-                    Add
-                  </Button>
-
-                  <Button
-                    border="none"
-                    fontSize="1rem"
-                    hoverColor="yellow"
-                    onClick={() => setShowAddTodo(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </AddTodoForm>
-            )}
-
-            <Modal
-              opacity="0.8"
-              showModal={showModal}
-              setShowModal={setShowModal}
+          <div className="formButtonContainer">
+            <Button
+              border="none"
+              fontSize="1rem"
+              hoverColor="yellow"
+              onClick={handleSubmit}
             >
-              <TodoContent
-                todo={currentTodo}
-                handleDelete={handleDelete}
-                setShowModal={setShowModal}
-              />
-            </Modal>
-            {provided.placeholder}
-          </TaskColumnWrapper>
-        );
-      }}
-    </Droppable>
+              Add
+            </Button>
+
+            <Button
+              border="none"
+              fontSize="1rem"
+              hoverColor="yellow"
+              onClick={() => setShowAddTodo(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </AddTodoForm>
+      )}
+
+      <Modal opacity="0.8" showModal={showModal} setShowModal={setShowModal}>
+        <TodoContent
+          todo={currentTodo}
+          handleDelete={handleDelete}
+          setShowModal={setShowModal}
+        />
+      </Modal>
+    </TaskColumnWrapper>
   );
 };
 

@@ -127,6 +127,29 @@ const TaskColumnGrid = () => {
 
       updateAllTaskColumns({ taskId: taskId, cols: newTaskColumns });
     } else {
+      const newColumn = [...currentTaskColumns];
+      const column = newColumn.find((col) => col._id === source.droppableId);
+
+      const columnItems = [...column.todos];
+
+      const [removed] = columnItems.splice(source.index, 1);
+
+      columnItems.splice(destination.index, 0, removed);
+
+      const newTaskColumns = newColumn
+        .map((col) =>
+          col._id === source.droppableId ? { ...col, todos: columnItems } : col
+        )
+        .map((col2) => {
+          return {
+            ...col2,
+            todos: col2.todos.map((item, index) => {
+              return { ...item, index, column: col2._id };
+            }),
+          };
+        });
+
+      updateAllTaskColumns({ taskId: taskId, cols: newTaskColumns });
     }
   };
 
