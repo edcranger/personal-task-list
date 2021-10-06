@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { taskSchema } from "../schema";
 
@@ -39,7 +39,7 @@ const TaskForm = ({ setShowModal, currTask }) => {
         category: currTask.category,
       });
     }
-  }, [isEditing, currentTask]);
+  }, [isEditing, currentTask, currTask, reset]);
 
   const handleChange = (e) => {
     const name = e.target.name;

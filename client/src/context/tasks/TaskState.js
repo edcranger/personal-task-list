@@ -4,9 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import TaskContext from "./taskContext";
 import taskReducer from "./taskReducer";
 
-//dumy data
-import { taskColumns } from "../../data/data";
-
 import {
   ADD_TASK,
   UPDATE_TASK,

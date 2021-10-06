@@ -1,23 +1,34 @@
 const jwt = require("jsonwebtoken"),
   User = require("../models/Users");
 
-exports.protect = (req, res, next) => {
-  //Get the token from the header
+exports.protect = async (req, res, next) => {
+  let token = req.cookies.token;
 
-  const token = req.headers["x-auth-token"];
-
-  //check if not token
   if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    return res.json({ success: false, message: "you are not allowed" });
   }
 
+  // console.log(token);
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    // @ts-ignore
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user = decode.id;
+    /*     if (decoded.xsrfToken !== req.headers["x-xsrf-token"]) {
+      return next(new errorResponse(`You are not authorized`, 401));
+    } */
+
+    const user = await User.findById(decoded.id);
+
+    console.log(user);
+
+    if (!user) {
+      return res.json({ success: false, message: "No user found" });
+    }
+
+    req.user = user;
 
     next();
   } catch (err) {
-    req.status(401).json({ message: "Token is not valid" });
+    return res.json({ success: false, message: "Catched Error" });
   }
 };

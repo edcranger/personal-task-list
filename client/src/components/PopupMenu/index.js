@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 //icons
 import { BiDotsVertical, BiPencil, BiTrash } from "react-icons/bi";

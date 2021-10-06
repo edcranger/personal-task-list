@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
-export const Button = styled.button`
+export const ButtonStyle = styled.button`
   background: ${({ background }) => (background ? background : `none`)};
-  border-radius: ${({ rounded }) => (rounded ? rounded : null)};
+  border-radius: ${({ corners }) => (corners ? corners : "0")};
   border: ${({ border }) => (border === "none" ? "none" : "1px solid black")};
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "10px")};
   height: 2.5rem;
@@ -20,18 +20,5 @@ export const Button = styled.button`
     cursor: pointer;
     color: ${({ hoverFontColor }) => (hoverFontColor ? hoverFontColor : null)};
     opacity: 0.8;
-  }
-`;
-
-export const ErrorContainer = styled.article`
-  margin: 10px 0;
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-
-  p {
-    color: var(--danger);
-    margin: 0;
-    text-align: center;
   }
 `;

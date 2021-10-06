@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -23,6 +24,8 @@ const Navbar = ({ title }) => {
   const [click, setClick] = useState(false);
 
   const handleClick = () => setClick(!click);
+
+  const location = useLocation();
 
   return (
     <Wrapper>

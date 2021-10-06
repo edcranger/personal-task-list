@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const useClickOutside = (handler) => {
   const domNode = useRef();
@@ -15,7 +15,7 @@ const useClickOutside = (handler) => {
     return () => {
       document.removeEventListener("mousedown", maybeHandler);
     };
-  }, []);
+  }, [handler]);
 
   return domNode;
 };

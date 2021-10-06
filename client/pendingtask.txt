@@ -1,8 +1,8 @@
 
 
 =======================Pending=========================
-
-
+1. update does not reflex in filtered task.
+2. useCallback implementation
 
 
 

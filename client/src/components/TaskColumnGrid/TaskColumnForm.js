@@ -17,7 +17,7 @@ const TaskColumnForm = ({ taskColumn, updateTaskColumn }) => {
 
   useEffect(() => {
     setTaskCol({ ...taskColumn });
-  }, []);
+  }, [taskColumn]);
 
   const handleChange = (e) => {
     const name = e.target.name;

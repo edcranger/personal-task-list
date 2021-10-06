@@ -96,7 +96,7 @@ export const AddTodoForm = styled.div`
 export const Button = styled.button`
   background: ${({ background }) => (background ? background : `none`)};
   border-radius: ${({ rounded }) => (rounded ? "20px" : "none")};
-  border: ${({ border }) => (border == "none" ? "none" : "1px solid black")};
+  border: ${({ border }) => (border === "none" ? "none" : "1px solid black")};
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "10px")};
   height: 2.5rem;
   min-width: 5rem;

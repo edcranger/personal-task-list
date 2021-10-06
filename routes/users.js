@@ -1,7 +1,20 @@
 const router = require("express").Router();
 const { check, validationResult } = require("express-validator");
+const { protect } = require("../middleware/auth");
 
-const { register } = require("../controllers/users");
+const { register, login, getUser } = require("../controllers/users");
+
+router
+  .route("/login")
+  .post(
+    [
+      check("email", "PLease include a valid email").isEmail(),
+      check("password", "Password is required").exists(),
+    ],
+    login
+  );
+
+router.route("/getme").get(protect, getUser);
 
 router
   .route("/")
