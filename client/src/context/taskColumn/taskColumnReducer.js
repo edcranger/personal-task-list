@@ -5,7 +5,6 @@ import {
   UPDATE_ALL_TASKCOLUMN,
   DELETE_TASKCOLUMN,
   ADD_TODO,
-  DELETE_TODO,
   IS_LOADING,
 } from "../types";
 

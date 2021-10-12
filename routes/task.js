@@ -17,6 +17,6 @@ router.use("/:taskId/task-column", taskColumnRouter);
 
 router.route("/:taskId").put(protect, updateTask).delete(protect, deleteTask);
 
-router.route("/").get(getTasks).post(createTask);
+router.route("/").get(protect, getTasks).post(createTask);
 
 module.exports = router;

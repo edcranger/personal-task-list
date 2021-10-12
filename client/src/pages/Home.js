@@ -13,6 +13,9 @@ import Avatar from "../components/Avatar";
 import Collapse from "../components/Collapse";
 import TaskFilter from "../components/Task/TaskFilter";
 
+//context
+/* import AuthContext from "../context/auth/authContext"; */
+
 const Home = () => {
   return (
     <HomeWrapper>

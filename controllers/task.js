@@ -4,6 +4,7 @@ const Tasks = require("../models/Tasks");
 //@desc     Get all todos in the database
 //@access   Private
 exports.getTasks = async (req, res) => {
+  console.log(req.user);
   try {
     const task = await Tasks.find().populate("task-columns");
 

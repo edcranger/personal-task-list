@@ -8,18 +8,14 @@ exports.protect = async (req, res, next) => {
     return res.json({ success: false, message: "you are not allowed" });
   }
 
-  // console.log(token);
   try {
-    // @ts-ignore
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
-    /*     if (decoded.xsrfToken !== req.headers["x-xsrf-token"]) {
-      return next(new errorResponse(`You are not authorized`, 401));
-    } */
+    if (decoded.xsrfToken !== req.headers["x-xsrf-token"]) {
+      return res.json({ success: false, message: "you are not authorized" });
+    }
 
     const user = await User.findById(decoded.id);
-
-    console.log(user);
 
     if (!user) {
       return res.json({ success: false, message: "No user found" });

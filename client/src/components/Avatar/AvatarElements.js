@@ -5,7 +5,6 @@ const Wrapper = styled.div`
   flex-direction: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid var(--lightGrey);
 `;
 
 const AvatarPhoto = styled.img`

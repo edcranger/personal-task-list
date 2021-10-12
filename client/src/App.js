@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import PrivateRoute from "./routing/PrivateRoute";
 
 //Containers
 import Home from "./pages/Home";
@@ -37,20 +33,20 @@ const App = () => {
           <TodoState>
             <Router>
               <Switch>
-                <Route exact path="/login" component={Login}></Route>
-                <Route exact path="/signup" component={Signup}></Route>
-                <Route path="/">
-                  <PageLayout>
-                    <Navbar />
-                    <PageMainContent>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/signup" component={Signup} />
+                <PageLayout>
+                  <Navbar />
+                  <PageMainContent>
+                    <Route path="/">
                       <Switch>
-                        <Route exact path="/" component={Home}></Route>
-                        <Route path="/task/:taskId" component={Task}></Route>
-                        <Route path="*" component={PageNotFound}></Route>
+                        <PrivateRoute exact path="/" component={Home} />
+                        <PrivateRoute path="/task/:taskId" component={Task} />
+                        <PrivateRoute path="*" component={PageNotFound} />
                       </Switch>
-                    </PageMainContent>
-                  </PageLayout>
-                </Route>
+                    </Route>
+                  </PageMainContent>
+                </PageLayout>
               </Switch>
             </Router>
             <GlobalStyles />

@@ -3,6 +3,12 @@
 =======================Pending=========================
 1. update does not reflex in filtered task.
 2. useCallback implementation
+3. create a alert notification
+4. Fix error handling 
+5. fix loading system
+6. Add task and edit task inputs overlap within the modal
+7. Add error handler in the API 
+
 
 
 

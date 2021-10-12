@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { taskSchema } from "../schema";
+import { taskSchema } from "../../schema";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
@@ -14,6 +14,7 @@ import {
   CategoriesForm,
 } from "./TaskFormElements";
 
+//components
 import { ErrorContainer, Button } from "../PageLayout/UtilStyles";
 
 const TaskForm = ({ setShowModal, currTask }) => {

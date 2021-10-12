@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
@@ -49,6 +49,7 @@ const TaskColumnGrid = () => {
       setShowModal(false);
       setContentType("");
     };
+    // eslint-disable-next-line
   }, [taskId]);
 
   const submitAddTaskColumn = (e) => {

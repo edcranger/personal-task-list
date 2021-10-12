@@ -15,22 +15,18 @@ import {
 const PopupMenu = ({ col, handler }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  const closeMenu = (e) => {
+  const closeMenu = () => {
     setShowMenu((showMenu) => !showMenu);
   };
 
-  const wew = useClickOutside(() => {
+  const clickoutside = useClickOutside(() => {
     setShowMenu(false);
   });
 
   return (
     <TaskColumnMenuContainer>
-      <BiDotsVertical
-        id={col._id}
-        className="taskColumnOptionIcon menu mena meork"
-        onClick={closeMenu}
-      />
-      <TaskColumnMenu ref={wew}>
+      <BiDotsVertical id={col._id} onClick={closeMenu} />
+      <TaskColumnMenu ref={clickoutside}>
         {showMenu && (
           <TaskColumnMenu>
             <TaskColumnMenuItem

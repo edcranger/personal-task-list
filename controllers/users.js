@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).select("+password");
 
     if (!user) return res.status(400).json({ message: "Invalid Credentials" });
 
@@ -35,6 +35,8 @@ exports.login = async (req, res) => {
     if (!passwordMatch) {
       return res.status(400).json({ message: "Invalid Credentials" });
     }
+
+    user.password = null;
 
     sendTokenResponse(user, 200, res);
   } catch (err) {
@@ -72,6 +74,7 @@ exports.register = async (req, res, next) => {
 };
 
 const sendTokenResponse = async (user, statusCode, res) => {
+  user.password = null;
   const xcsrf_token = nanoid();
   const token = await user.getSignedJwtToken(xcsrf_token);
 
@@ -79,8 +82,9 @@ const sendTokenResponse = async (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
+    httpOnly: false,
     sameSite: "None",
+    secure: true,
   };
 
   const csrfTokenOption = {
@@ -89,6 +93,7 @@ const sendTokenResponse = async (user, statusCode, res) => {
     ),
     httpOnly: false,
     sameSite: "Strict",
+    secure: true,
   };
 
   res

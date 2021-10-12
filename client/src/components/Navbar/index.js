@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
+//icons
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaTimes } from "react-icons/fa";
 import { RiDashboardFill } from "react-icons/ri";
 import { BiUserCircle } from "react-icons/bi";
+import { HiOutlineLogout } from "react-icons/hi";
+import { FiSettings } from "react-icons/fi";
 
 //styles
 import {
@@ -18,14 +21,39 @@ import {
   NavLink,
   MenuIcon,
   NavMobileLink,
+  NavButton,
 } from "./NavbarElements";
+
+import { Menu, MenuItem } from "../Menu";
+
+//context
+import AuthContext from "../../context/auth/authContext";
+
+import useClickOutside from "../../Hooks/useClickOutside";
 
 const Navbar = ({ title }) => {
   const [click, setClick] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
+  const history = useHistory();
 
   const handleClick = () => setClick(!click);
 
-  const location = useLocation();
+  const { user, logout, loadUser } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+    history.push("/login");
+  };
+
+  const clickoutside = useClickOutside(() => {
+    setShowMenu(false);
+  });
+
+  useEffect(() => {
+    loadUser();
+    return () => {};
+  }, []);
 
   return (
     <Wrapper>
@@ -42,15 +70,30 @@ const Navbar = ({ title }) => {
         <NavMenu active={click ? true : false}>
           <NavItem>
             <NavLink to="/">
-              <RiDashboardFill className="navIcon" id="wew" />
+              <RiDashboardFill className="navIcon" />
               <NavMobileLink>Dashboard</NavMobileLink>
             </NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink to="/tasks">
-              <BiUserCircle className="navIcon" id="wew" />
+          <NavItem ref={clickoutside}>
+            <NavButton onClick={() => setShowMenu(!showMenu)}>
+              <BiUserCircle className="navIcon" />
               <NavMobileLink>Account</NavMobileLink>
-            </NavLink>
+            </NavButton>
+
+            <Menu showMenu={showMenu}>
+              <MenuItem>
+                <BiUserCircle />
+                {user && <span>{user.full_name}</span>}
+              </MenuItem>
+              <MenuItem>
+                <FiSettings />
+                Settings
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <HiOutlineLogout />
+                Logout
+              </MenuItem>
+            </Menu>
           </NavItem>
         </NavMenu>
       </Content>

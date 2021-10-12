@@ -15,6 +15,7 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     require: [true, "Please enter a valid password"],
+    select: false,
   },
   date: {
     type: Date,
@@ -31,9 +32,13 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.getSignedJwtToken = async function (xcsrf_token) {
-  return jwt.sign({ id: this._id, xcsrf_token }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign(
+    { id: this._id, xsrfToken: xcsrf_token },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    }
+  );
 };
 
 UserSchema.methods.isPasswordMatch = async function (enteredPassword) {

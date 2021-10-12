@@ -89,6 +89,28 @@ export const NavMenu = styled.ul`
 
 export const NavItem = styled.li`
   height: 80px;
+  position: relative;
+`;
+
+export const NavButton = styled.button`
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+  font-size: var(--fontMed);
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background: transparent;
+  outline: none;
+  border: none;
+
+  :hover {
+    color: #006bb3;
+    transition: all 0.3s ease-in;
+    border-bottom: 4px solid #006bb3;
+    cursor: pointer;
+  }
 `;
 
 export const NavLink = styled(Link)`
