@@ -1,9 +1,12 @@
 //tasks
+export const FETCH_USER_TASKS = "FETCH_USER_TASKS";
 export const GET_CURRENT_TASK = "GET_CURRENT_TASK";
 export const ADD_TASK = "ADD_TASK";
+export const SET_TASK_ERROR = "SET_TASK_ERROR ";
 export const UPDATE_TASK = "UPDATE_TASK";
 export const DELETE_TASK = "DELETE_TASK";
 export const FILTER_TASKS = "FILTER_TASKS";
+export const TASKS_FETCH_FAIL = "TASKS_FETCH_FAIL";
 export const CLEAR_FILTER_TASKS = "CLEAR_FILTER_TASKS";
 export const SET_CURRENT_TASK = "SET_CURRENT_TASK";
 export const CLEAR_CURRENT_TASK = "CLEAR_CURRENT_TASK";
@@ -19,6 +22,7 @@ export const IS_LOADING = "IS_LOADING";
 //utilities
 export const SET_IS_EDITING = "SET_IS_EDITING";
 export const SHOW_MODAL = "SHOW_MODAL";
+export const SET_LOADING = "SET_LOADING";
 
 //Todos
 export const ADD_TODO = "ADD_TODO";
@@ -40,4 +44,3 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
-export const SET_LOADING = "SET_LOADING";

@@ -3,7 +3,7 @@ const router = require("express").Router();
 const { protect } = require("../middleware/auth");
 
 const {
-  getTasks,
+  getUsersTasks,
   createTask,
   updateTask,
   deleteTask,
@@ -17,6 +17,6 @@ router.use("/:taskId/task-column", taskColumnRouter);
 
 router.route("/:taskId").put(protect, updateTask).delete(protect, deleteTask);
 
-router.route("/").get(protect, getTasks).post(createTask);
+router.route("/").get(protect, getUsersTasks).post(protect, createTask);
 
 module.exports = router;

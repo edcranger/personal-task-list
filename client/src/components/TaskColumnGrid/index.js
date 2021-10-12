@@ -12,7 +12,7 @@ import {
   TaskColumnFormWrapper,
   TaskColumnFormInput,
 } from "./TaskColumnElements";
-import { AddBtn } from "../Task/TasksElements";
+import { AddBtn } from "../../containers/Home/HomeElements";
 
 //componet
 import TaskColumn from "./TaskColumn";

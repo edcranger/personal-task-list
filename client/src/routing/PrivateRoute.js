@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/auth/authContext";
-import { Route, Redirect, useHistory } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
-
-  const history = useHistory();
 
   if (loading) {
     return null;

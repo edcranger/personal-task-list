@@ -1,12 +1,13 @@
 const Tasks = require("../models/Tasks");
 
-//@route    GET api/todos
+//@route    GET api/tasks
 //@desc     Get all todos in the database
 //@access   Private
-exports.getTasks = async (req, res) => {
-  console.log(req.user);
+exports.getUsersTasks = async (req, res) => {
   try {
-    const task = await Tasks.find().populate("task-columns");
+    const task = await Tasks.find({ user: req.user._id }).populate(
+      "task-columns"
+    );
 
     res.status(200).json({ success: true, task, count: task.length });
   } catch (err) {
@@ -30,22 +31,15 @@ exports.createTask = async (req, res) => {
     task = await Tasks.create({
       taskTitle,
       description,
-      user,
+      user: req.user._id,
     });
+
     res.status(200).json({ success: true, task });
   } catch (err) {
-    console.log(err);
-  }
-};
-
-//@route    DELETE api/todos
-//@desc     Delete a todo
-//@access   Private
-exports.deleteTask = async (req, res) => {
-  try {
-    res.send("Todo deleted");
-  } catch (err) {
-    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: "Something's wrong with creating a task.",
+    });
   }
 };
 
@@ -65,7 +59,7 @@ exports.updateTask = async (req, res) => {
         message: "Task cannot be found.",
       });
 
-    if (task.user.toString() !== userId)
+    if (task.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to Update this todo.",
@@ -82,20 +76,22 @@ exports.updateTask = async (req, res) => {
   }
 };
 
+//@route    DELETE api/tasks/:taskId
+//@desc     Delete a Task
+//@access   Private
 exports.deleteTask = async (req, res) => {
-  const userId = req.user;
   const taskId = req.params.taskId;
 
   try {
-    const task = await Todos.findById(taskId);
+    const task = await Tasks.findById(taskId);
 
-    if (!todo)
+    if (!task)
       return res.status(401).json({
         success: false,
         message: "Todo cannot be found.",
       });
 
-    if (task.user.toString() !== userId)
+    if (task.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to delete this todo.",

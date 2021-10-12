@@ -1,80 +1,99 @@
 import React, { useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
 import Api from "../../Api";
 
+//Context and reducers
 import TaskContext from "./taskContext";
 import taskReducer from "./taskReducer";
 
 import {
+  FETCH_USER_TASKS,
+  SET_LOADING,
   ADD_TASK,
   UPDATE_TASK,
   DELETE_TASK,
+  SET_TASK_ERROR,
   SET_CURRENT_TASK,
   CLEAR_CURRENT_TASK,
   FILTER_TASKS,
   CLEAR_FILTER_TASKS,
   SET_IS_EDITING,
   GET_CURRENT_TASK,
+  TASKS_FETCH_FAIL,
 } from "../types";
 
 const TaskState = (props) => {
   const initialState = {
-    tasks: [
-      {
-        _id: "1",
-        taskTitle: "Kumain",
-        description: "Masarap tlga ang ramen",
-        complete: false,
-        status: "pending",
-        category: "Todo",
-        date: "2021-09-05T16:00:11.627+00:00",
-      },
-      {
-        _id: "2",
-        taskTitle: "Matulog",
-        description: "Humilik kahit nahihirapn",
-        complete: false,
-        status: "pending",
-        category: "Todo",
-        date: "2021-09-05T16:00:11.627+00:00",
-      },
-      {
-        _id: "3",
-        taskTitle: "Maglaro",
-        description: "Valorant is the best",
-        complete: false,
-        status: "pending",
-        category: "Todo",
-        date: "2021-09-05T16:00:11.627+00:00",
-      },
-    ],
+    tasks: [],
     currentTask: null,
     isEditing: false,
     filtered: null,
+    error: null,
+    loading: false,
   };
 
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
-  //Get Current Task
-  const getCurrentTask = (id) => {
-    dispatch({ type: GET_CURRENT_TASK, payload: id });
+  //Get all tasks of user --- in use
+  const getAllTaskOfUser = async () => {
+    dispatch({ type: SET_LOADING });
+    const res = await Api.get("/api/tasks");
+
+    if (res.data.success) {
+      dispatch({ type: FETCH_USER_TASKS, payload: res.data });
+    }
+
+    try {
+    } catch (err) {
+      dispatch({ type: TASKS_FETCH_FAIL, payload: err.response.data.message });
+    }
   };
 
   //Add Task
-  const addTask = (task) => {
-    task._id = uuidv4();
+  const addTask = async (task) => {
+    try {
+      const res = await Api.post("/api/tasks", task);
 
-    dispatch({ type: ADD_TASK, payload: task });
+      if (res.data.success) {
+        dispatch({ type: ADD_TASK, payload: res.data });
+      }
+    } catch (err) {
+      dispatch({ type: SET_TASK_ERROR, payload: err.response.data.message });
+    }
   };
 
   //Update Task
-  const updateTask = (task) => {
-    dispatch({ type: UPDATE_TASK, payload: task });
+  const updateTask = async (task) => {
+    try {
+      const { id } = task;
+
+      const res = await Api.put(`/api/tasks/${id}`, task);
+
+      if (res.data.success) {
+        dispatch({ type: UPDATE_TASK, payload: task });
+      }
+    } catch (err) {
+      dispatch({ type: SET_TASK_ERROR, payload: err.response.data.message });
+    }
   };
 
   //Delete Task
-  const deleteTask = (id) => {
-    dispatch({ type: DELETE_TASK, payload: id });
+  const deleteTask = async (id) => {
+    try {
+      const res = await Api.delete(`/api/tasks/${id}`);
+
+      if (res.data.success) {
+        dispatch({ type: DELETE_TASK, payload: id });
+      }
+    } catch (err) {
+      dispatch({ type: SET_TASK_ERROR, payload: err.response.data.message });
+    }
+  };
+
+  /* ======================================================================== */
+
+  //Get Current Task
+  const getCurrentTask = (id) => {
+    dispatch({ type: GET_CURRENT_TASK, payload: id });
   };
 
   //Set current task
@@ -105,6 +124,7 @@ const TaskState = (props) => {
     <TaskContext.Provider
       value={{
         ...state,
+        getAllTaskOfUser,
         getCurrentTask,
         addTask,
         deleteTask,

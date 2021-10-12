@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./routing/PrivateRoute";
 
 //Containers
-import Home from "./pages/Home";
+import Home from "./containers/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Task from "./pages/Task";
 import Signup from "./containers/Signup";

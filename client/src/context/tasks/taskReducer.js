@@ -1,4 +1,6 @@
 import {
+  FETCH_USER_TASKS,
+  SET_LOADING,
   GET_CURRENT_TASK,
   ADD_TASK,
   UPDATE_TASK,
@@ -13,14 +15,25 @@ import {
 
 const taskReducer = (state, action) => {
   switch (action.type) {
-    case GET_CURRENT_TASK:
+    case FETCH_USER_TASKS:
       return {
         ...state,
-        currentTask: state.tasks.find((task) => task._id === action.payload),
+        tasks: action.payload.task,
+        loading: false,
       };
 
     case ADD_TASK:
-      return { ...state, tasks: [...state.tasks, action.payload] };
+      return { ...state, tasks: [...state.tasks, action.payload.task] };
+
+    case DELETE_TASK:
+      return {
+        ...state,
+        tasks: state.tasks.filter((task) => task._id !== action.payload),
+        filtered:
+          state.filtered !== null
+            ? state.filtered.filter((task) => task._id !== action.payload)
+            : null,
+      };
 
     case UPDATE_TASK:
       return {
@@ -32,14 +45,10 @@ const taskReducer = (state, action) => {
         isEditing: false,
       };
 
-    case DELETE_TASK:
+    case GET_CURRENT_TASK:
       return {
         ...state,
-        tasks: state.tasks.filter((task) => task._id !== action.payload),
-        filtered:
-          state.filtered !== null
-            ? state.filtered.filter((task) => task._id !== action.payload)
-            : null,
+        currentTask: state.tasks.find((task) => task._id === action.payload),
       };
 
     case SET_CURRENT_TASK:
@@ -73,6 +82,10 @@ const taskReducer = (state, action) => {
 
     case SHOW_MODAL:
       return { ...state, showModal: action.payload };
+
+    case SET_LOADING: {
+      return { ...state, loading: true };
+    }
     default:
       return state;
   }

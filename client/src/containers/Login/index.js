@@ -29,7 +29,7 @@ import { FcGoogle } from "react-icons/fc";
 const Login = () => {
   const history = useHistory();
 
-  const { login, isAuthenticated, loading, error } = useContext(AuthContext);
+  const { login, isAuthenticated, error } = useContext(AuthContext);
 
   const {
     register,
