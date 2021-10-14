@@ -3,16 +3,6 @@ import styled from "styled-components";
 //icon
 import { FcPlus } from "react-icons/fc";
 
-export const Wrapper = styled.div`
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  align-items: start;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 15px;
-  margin: 10px 0;
-`;
-
 export const TaskColumnWrapper = styled.div`
   min-height: 300px;
   padding: 15px 10px;
@@ -91,43 +81,4 @@ export const AddTodoForm = styled.div`
     display: flex;
     justify-content: end;
   }
-`;
-
-export const Button = styled.button`
-  background: ${({ background }) => (background ? background : `none`)};
-  border-radius: ${({ rounded }) => (rounded ? "20px" : "none")};
-  border: ${({ border }) => (border === "none" ? "none" : "1px solid black")};
-  font-size: ${({ fontSize }) => (fontSize ? fontSize : "10px")};
-  height: 2.5rem;
-  min-width: 5rem;
-  width: auto;
-  padding: 10px;
-  font-weight: bolder;
-  font-size: 1rem;
-  transition: all 0.2s ease-in-out;
-
-  :hover {
-    background: ${({ hoverColor }) => (hoverColor ? hoverColor : null)};
-    cursor: pointer;
-    color: var(--white);
-  }
-`;
-
-/////////////////////// Task Column Form//////////////////////////////////
-export const TaskColumnFormWrapper = styled.form`
-  display: grid;
-  grid-template-rows: repeat(auto-fill, 1fr);
-`;
-
-export const TaskColumnFormInput = styled.input`
-  padding: 10px 8px;
-  font-size: var(--fontMed);
-  border-radius: 5px;
-`;
-
-export const BtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
 `;

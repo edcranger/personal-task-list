@@ -89,6 +89,20 @@ const TaskState = (props) => {
     }
   };
 
+  //Filter Task
+  const filterTasks = (text) => {
+    dispatch({ type: FILTER_TASKS, payload: text });
+  };
+
+  const clearFilterTasks = () => {
+    dispatch({ type: CLEAR_FILTER_TASKS });
+  };
+
+  //isEditing?
+  const userEditing = (editing) => {
+    dispatch({ type: SET_IS_EDITING, payload: editing });
+  };
+
   /* ======================================================================== */
 
   //Get Current Task
@@ -104,20 +118,6 @@ const TaskState = (props) => {
   //Clear current task
   const clearCurrentTask = () => {
     dispatch({ type: CLEAR_CURRENT_TASK });
-  };
-
-  //Filter Task
-  const filterTasks = (text) => {
-    dispatch({ type: FILTER_TASKS, payload: text });
-  };
-
-  const clearFilterTasks = () => {
-    dispatch({ type: CLEAR_FILTER_TASKS });
-  };
-
-  //isEditing?
-  const userEditing = (editing) => {
-    dispatch({ type: SET_IS_EDITING, payload: editing });
   };
 
   return (

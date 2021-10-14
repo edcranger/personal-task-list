@@ -74,14 +74,3 @@ export const CategoriesForm = styled.select`
     border: 1px solid #ffbf00;
   }
 `;
-export const TaskFilterForm = styled.input`
-  padding: 5px 15px;
-  border-radius: 15px;
-  font-size: var(--fontBig);
-  margin: 10px 5px;
-
-  :focus {
-    outline: none;
-    border: 1px solid #ffbf00;
-  }
-`;

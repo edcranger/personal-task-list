@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
@@ -16,19 +16,28 @@ import {
 //conponents
 import Avatar from "../../components/Avatar";
 import Collapse from "../../components/Collapse";
-import TaskFilter from "../../components/Task/TaskFilter";
 import TaskItems from "../../components/Task/TaskItems";
 import Button from "../../components/Button";
 import TaskForm from "../../components/Task/TaskForm";
 import Modal from "../../components/Modal";
+import Input from "../../components/Forms/Input";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [deletingTask, setDeletingTask] = useState(false);
   const [currTask, setCurrTask] = useState(null);
 
-  const { getAllTaskOfUser, tasks, filtered, deleteTask, userEditing } =
-    useContext(TaskContext);
+  const text = useRef("");
+
+  const {
+    getAllTaskOfUser,
+    tasks,
+    filtered,
+    clearFilterTasks,
+    filterTasks,
+    deleteTask,
+    userEditing,
+  } = useContext(TaskContext);
 
   const handleClick = () => setShowModal(true);
 
@@ -51,10 +60,22 @@ const Home = () => {
     setShowModal(false);
   };
 
+  const filterHandler = (e) => {
+    text.current.value !== ""
+      ? filterTasks(e.target.value)
+      : clearFilterTasks();
+  };
+
   useEffect(() => {
     getAllTaskOfUser();
     return () => {};
   }, []);
+
+  useEffect(() => {
+    if (filtered === null) {
+      text.current.value = "";
+    }
+  }, [filtered]);
 
   return (
     <Wrapper>
@@ -63,7 +84,14 @@ const Home = () => {
         <Collapse />
       </SideSection>
       <MainSection>
-        <TaskFilter />
+        {/* This is the Filter search bar */}
+        <Input
+          width="100%"
+          corners="20px"
+          onChange={filterHandler}
+          ref={text}
+          type={text}
+        />
 
         <Grid>
           {tasks.length === 0 && (
@@ -71,9 +99,14 @@ const Home = () => {
               <h1>Please Add Task</h1>
             </div>
           )}
-          {tasks.map((task) => (
-            <TaskItems key={task._id} task={task} handler={handler} />
-          ))}
+
+          {filtered !== null
+            ? filtered.map((task) => (
+                <TaskItems key={task._id} task={task} handler={handler} />
+              ))
+            : tasks.map((task) => (
+                <TaskItems key={task._id} task={task} handler={handler} />
+              ))}
         </Grid>
 
         <AddTask>

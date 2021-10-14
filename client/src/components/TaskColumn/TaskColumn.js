@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
 //styles
@@ -8,7 +7,6 @@ import {
   AddTodoForm,
   TaskColumnWrapper,
   DroppableContainer,
-  Button,
 } from "./TaskColumnElements";
 
 //components
@@ -16,6 +14,7 @@ import TodoCard from "../Todo/TodoCard";
 import Modal from "../Modal";
 import TodoContent from "../Todo/TodoContent";
 import PopupMenu from "../PopupMenu";
+import Button from "../Button";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
@@ -40,19 +39,15 @@ const TaskColumn = ({ col, handler }) => {
     const newCol = { ...col };
 
     const newTodo = {
-      _id: uuidv4(),
-      user: newCol.user,
       task: newCol.task,
       title: todoTitle,
       content: "",
-      status: "pending",
-      completed: false,
-      date: Date.now(),
       columnIndex: col.todos.length + 1,
     };
 
-    newCol.todos.push(newTodo);
-    addTodoToColumn();
+    const payload = { newCol, newTodo };
+
+    addTodoToColumn(payload);
     setTodoTitle("");
     setShowAddTodo(false);
   };

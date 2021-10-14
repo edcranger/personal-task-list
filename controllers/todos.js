@@ -16,14 +16,17 @@ exports.getTodos = async (req, res) => {
   }
 };
 
-//@route    GET api/todos
+//@route    GET /api/task-column/taskColumnId/todos
 //@desc     Get all todos in the database
 //@access   Private
 exports.getTodo = async (req, res) => {
   const taskColumnId = req.params.taskColumnId;
 
   try {
-    const todo = await Todos.find({ user: req.user, taskColumn: taskColumnId });
+    const todo = await Todos.find({
+      user: req.user._id,
+      taskColumn: taskColumnId,
+    });
 
     res.status(200).json({ success: true, count: todo.length, todo });
   } catch (err) {
@@ -31,12 +34,11 @@ exports.getTodo = async (req, res) => {
   }
 };
 
-//@route    POST api/todos
+//@route    POST /api/task-column/taskColumnId/todos
 //@desc     Post a todo
 //@access   Private
 exports.createTodo = async (req, res) => {
   const taskColumnId = req.params.taskColumnId;
-  const userId = req.user;
 
   const errors = validationResult(req);
 
@@ -46,13 +48,8 @@ exports.createTodo = async (req, res) => {
 
   const { title, content, columnIndex, task } = req.body;
 
-  /*   if (!title || !content)
-    return res
-      .status(400)
-      .json({ success: false, message: "Please complete all fields" }); */
-
   try {
-    let todo = await Todos.findOne({ title });
+    let todo = await Todos.findOne({ title, user: req.user._id });
 
     if (todo)
       return res
@@ -60,7 +57,7 @@ exports.createTodo = async (req, res) => {
         .json({ success: false, message: "Todo title is already been used." });
 
     todo = await Todos.create({
-      user: userId,
+      user: req.user._id,
       taskColumn: taskColumnId,
       task,
       title,
@@ -70,7 +67,9 @@ exports.createTodo = async (req, res) => {
 
     res.status(200).json({ success: true, todo });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to create new todo" });
   }
 };
 

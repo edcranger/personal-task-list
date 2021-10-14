@@ -47,7 +47,6 @@ exports.createTask = async (req, res) => {
 //@desc     Update a todo
 //@access   Private
 exports.updateTask = async (req, res) => {
-  const userId = req.user;
   const taskId = req.params.taskId;
 
   try {

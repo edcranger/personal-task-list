@@ -13,7 +13,9 @@ exports.adminGetTaskColumns = async (req, res, next) => {
       .status(200)
       .json({ success: true, count: taskColumn.length, taskColumn });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Not allowed to this route." });
   }
 };
 
@@ -23,17 +25,22 @@ exports.adminGetTaskColumns = async (req, res, next) => {
 exports.getTaskColumns = async (req, res) => {
   const { taskId } = req.params;
   try {
-    const taskColumn = await TaskColumns.find({ user: req.user, task: taskId });
+    const taskColumns = await TaskColumns.find({
+      user: req.user,
+      task: taskId,
+    }).populate("todos");
 
     res
       .status(200)
-      .json({ success: true, count: taskColumn.length, taskColumn });
+      .json({ success: true, count: taskColumns.length, taskColumns });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Not allowed to this route." });
   }
 };
 
-//@route    POST api/task-columns
+//@route    POST /api/tasks/taskId/task-column
 //@desc     create a taskColumn
 //@access   Private
 exports.createTaskColumn = async (req, res) => {
@@ -63,17 +70,21 @@ exports.createTaskColumn = async (req, res) => {
       columnName,
     });
 
+    await taskColumn.populate("todos");
+
     res.status(200).json({ success: true, taskColumn });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to create new column" });
   }
 };
 
-//@route    DELETE api/task-columns
+//@route    DELETE /api/tasks/taskColumnId/task-column
 //@desc     Delete a task-columns
 //@access   Private
 exports.deleteTaskColumns = async (req, res) => {
-  const userId = req.user;
+  const userId = req.user._id;
   const taskColumnId = req.params.taskColumnId;
 
   try {
@@ -85,7 +96,7 @@ exports.deleteTaskColumns = async (req, res) => {
         message: "task column cannot be found.",
       });
 
-    if (taskColumn.user.toString() !== userId)
+    if (taskColumn.user.toString() !== userId.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to delete this todo.",
@@ -95,15 +106,17 @@ exports.deleteTaskColumns = async (req, res) => {
 
     res.status(200).json({ success: true, taskColumn: [] });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to delete column" });
   }
 };
 
-//@route    Update api/todos
+//@route    Update /api/task-column/taskColumnId
 //@desc     Update a todo
 //@access   Private
 exports.updateTaskColumn = async (req, res) => {
-  const userId = req.user;
+  const userId = req.user._id;
   const taskColumnId = req.params.taskColumnId;
 
   try {
@@ -115,7 +128,7 @@ exports.updateTaskColumn = async (req, res) => {
         message: "Task column cannot be found.",
       });
 
-    if (taskColumn.user.toString() !== userId)
+    if (taskColumn.user.toString() !== userId.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to Update this todo.",
@@ -126,8 +139,12 @@ exports.updateTaskColumn = async (req, res) => {
       runValidators: true,
     });
 
+    await taskColumn.populate("todos");
+
     res.status(200).json({ success: true, taskColumn });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to update column" });
   }
 };

@@ -10,7 +10,6 @@ import {
   SET_IS_EDITING,
   FILTER_TASKS,
   CLEAR_FILTER_TASKS,
-  SHOW_MODAL,
 } from "../types";
 
 const taskReducer = (state, action) => {
@@ -56,18 +55,19 @@ const taskReducer = (state, action) => {
         ...state,
         currentTask: action.payload,
       };
+
     case CLEAR_CURRENT_TASK:
       return {
         ...state,
         currentTask: null,
       };
+
     case FILTER_TASKS:
       return {
         ...state,
         filtered: state.tasks.filter((task) => {
           const regex = new RegExp(`${action.payload}`, "gi");
-
-          return task.taskTitle.match(regex) || task.description.match(regex);
+          return task.taskTitle.match(regex);
         }),
       };
 
@@ -79,9 +79,6 @@ const taskReducer = (state, action) => {
 
     case SET_IS_EDITING:
       return { ...state, isEditing: action.payload };
-
-    case SHOW_MODAL:
-      return { ...state, showModal: action.payload };
 
     case SET_LOADING: {
       return { ...state, loading: true };

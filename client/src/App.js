@@ -5,7 +5,7 @@ import PrivateRoute from "./routing/PrivateRoute";
 //Containers
 import Home from "./containers/Home";
 import PageNotFound from "./pages/PageNotFound";
-import Task from "./pages/Task";
+import Task from "./containers/Task";
 import Signup from "./containers/Signup";
 import Login from "./containers/Login";
 

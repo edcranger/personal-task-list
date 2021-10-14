@@ -4,8 +4,8 @@ import {
   UPDATE_TASKCOLUMN,
   UPDATE_ALL_TASKCOLUMN,
   DELETE_TASKCOLUMN,
-  ADD_TODO,
-  IS_LOADING,
+  SET_TASKCOLUMN_ERROR,
+  SET_LOADING,
 } from "../types";
 
 const taskReducer = (state, action) => {
@@ -13,16 +13,15 @@ const taskReducer = (state, action) => {
     case GET_ALL_TASKCOLUMNS:
       return {
         ...state,
-        currentTaskColumns: state.taskColumns.filter(
-          (column) => column.task === action.payload
-        ),
-        isLoading: false,
+        currentTaskColumns: action.payload,
+        loading: false,
       };
 
     case ADD_TASKCOLUMN:
       return {
         ...state,
         currentTaskColumns: [...state.currentTaskColumns, action.payload],
+        loading: false,
       };
 
     case DELETE_TASKCOLUMN:
@@ -32,9 +31,6 @@ const taskReducer = (state, action) => {
           (column) => column._id !== action.payload
         ),
       };
-
-    case ADD_TODO:
-      return { ...state };
 
     case UPDATE_TASKCOLUMN:
       const newTaskColumns = state.currentTaskColumns.map((taskCol) =>
@@ -57,8 +53,11 @@ const taskReducer = (state, action) => {
         currentTaskColumns: action.payload.cols,
       };
 
-    case IS_LOADING:
-      return { ...state, isLoading: true };
+    case SET_TASKCOLUMN_ERROR:
+      return { ...state };
+
+    case SET_LOADING:
+      return { ...state, loading: true };
 
     default:
       return state;

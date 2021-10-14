@@ -1,30 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import { v4 as uuidv4 } from "uuid";
-
 //styles
-import {
-  Wrapper,
-  Button,
-  BtnContainer,
-  TaskColumnFormWrapper,
-  TaskColumnFormInput,
-} from "./TaskColumnElements";
-import { AddBtn } from "../../containers/Home/HomeElements";
-
-//componet
-import TaskColumn from "./TaskColumn";
-import Modal from "../Modal";
+import { Wrapper, Grid, BtnContainer, AddBtn } from "./TaskElements";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
 
-import TaskColumnForm from "./TaskColumnForm";
-import { ErrorContainer } from "../PageLayout/UtilStyles";
+//components
+import TaskColumn from "../../components/TaskColumn/TaskColumn";
+import Modal from "../../components/Modal";
+import Form from "../../components/Forms/Form";
+import Input from "../../components/Forms/Input";
+import Button from "../../components/Button";
 
-const TaskColumnGrid = () => {
+const Task = () => {
   const [showModal, setShowModal] = useState(false);
   const [taskColumn, setTaskColumn] = useState(null);
   const [columnName, setColumnName] = useState("");
@@ -42,16 +33,6 @@ const TaskColumnGrid = () => {
     updateAllTaskColumns,
   } = useContext(TaskColumnContext);
 
-  useEffect(() => {
-    getAllColumns(taskId);
-
-    return () => {
-      setShowModal(false);
-      setContentType("");
-    };
-    // eslint-disable-next-line
-  }, [taskId]);
-
   const submitAddTaskColumn = (e) => {
     setError("");
     e.preventDefault();
@@ -62,13 +43,12 @@ const TaskColumnGrid = () => {
 
     const newColumm = {
       columnName: columnName,
-      task: taskId,
       todos: [],
-      user: "1235f02345345345",
-      _id: uuidv4(),
     };
 
-    addTaskColumn(newColumm);
+    const payload = { taskId, newColumm };
+
+    addTaskColumn(payload);
     setColumnName("");
     setShowModal(false);
     setError("");
@@ -86,6 +66,19 @@ const TaskColumnGrid = () => {
     deleteTaskColumn(taskColumn._id);
     setTaskColumn(null);
     setShowModal(false);
+  };
+
+  const handleUpdate = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    /*  setTaskCol(e.target.value); */
+    setTaskColumn({ ...taskColumn, [name]: value });
+  };
+
+  const onUpdateSubmit = (e) => {
+    e.preventDefault();
+
+    updateTaskColumn(taskColumn);
   };
 
   const onDragEnd = (result) => {
@@ -154,75 +147,90 @@ const TaskColumnGrid = () => {
     }
   };
 
-  if (!currentTaskColumns) return <h1>Loading....</h1>;
-  return (
-    <Wrapper>
-      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-        {currentTaskColumns.map((col) => {
-          return <TaskColumn key={col._id} col={col} handler={handler} />;
-        })}
-      </DragDropContext>
+  useEffect(() => {
+    getAllColumns(taskId);
 
-      <BtnContainer>
-        <AddBtn onClick={() => handler({ type: "add" })} />
-      </BtnContainer>
+    return () => {
+      setShowModal(false);
+      setContentType("");
+    };
+    // eslint-disable-next-line
+  }, [taskId]);
 
-      {/* ======================MODAL AREA======================= */}
-      <Modal
-        title={contentType ? "Add Column" : null}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      >
-        {contentType === "update" && (
-          <TaskColumnForm
-            taskColumn={taskColumn}
-            updateTaskColumn={updateTaskColumn}
-          />
-        )}
+  if (!currentTaskColumns) {
+    return <h1>Loading....</h1>;
+  } else {
+    return (
+      <Wrapper>
+        <Grid>
+          <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+            {currentTaskColumns.map((col) => {
+              return <TaskColumn key={col._id} col={col} handler={handler} />;
+            })}
+          </DragDropContext>
 
-        {contentType === "delete" && (
-          <div>
-            <h3>Are you sure you want to delete this todo?</h3>
-            <Button
-              border="none"
-              hoverColor="var(--danger)"
-              onClick={confirmDelete}
-            >
-              Yes
-            </Button>
+          <BtnContainer>
+            <AddBtn onClick={() => handler({ type: "add" })} />
+          </BtnContainer>
+        </Grid>
 
-            <Button
-              border="none"
-              hoverColor="var(--warning)"
-              onClick={() => setShowModal(false)}
-            >
-              No
-            </Button>
-          </div>
-        )}
+        {/* ======================MODAL AREA======================= */}
+        <Modal showModal={showModal} setShowModal={setShowModal}>
+          {contentType === "add" && (
+            <Form onSubmit={submitAddTaskColumn}>
+              <Input
+                width="100%"
+                corners="10px"
+                placeholder="Column Name"
+                value={columnName}
+                onChange={(e) => setColumnName(e.target.value)}
+              />
 
-        {contentType === "add" && (
-          <TaskColumnFormWrapper onSubmit={submitAddTaskColumn}>
-            {error ? (
-              <ErrorContainer>
-                <p>{error}</p>
-              </ErrorContainer>
-            ) : null}
-            <TaskColumnFormInput
-              placeholder="Column Name"
-              value={columnName}
-              onChange={(e) => setColumnName(e.target.value)}
-            />
-            <BtnContainer>
-              <Button hoverColor="var(--success)" border="none" type="submit">
-                Add
+              <BtnContainer>
+                <Button hoverColor="var(--success)" border="none" type="submit">
+                  Create Column
+                </Button>
+              </BtnContainer>
+            </Form>
+          )}
+
+          {contentType === "update" && (
+            <Form onSubmit={onUpdateSubmit}>
+              <Input
+                type="text"
+                name="columnName"
+                value={taskColumn.columnName}
+                onChange={handleUpdate}
+                width="100%"
+                corners="10px"
+              />
+            </Form>
+          )}
+
+          {contentType === "delete" && (
+            <div>
+              <h3>Are you sure you want to delete this todo?</h3>
+              <Button
+                border="none"
+                hoverColor="var(--danger)"
+                onClick={confirmDelete}
+              >
+                Yes
               </Button>
-            </BtnContainer>
-          </TaskColumnFormWrapper>
-        )}
-      </Modal>
-    </Wrapper>
-  );
+
+              <Button
+                border="none"
+                hoverColor="var(--warning)"
+                onClick={() => setShowModal(false)}
+              >
+                No
+              </Button>
+            </div>
+          )}
+        </Modal>
+      </Wrapper>
+    );
+  }
 };
 
-export default TaskColumnGrid;
+export default Task;

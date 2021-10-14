@@ -16,10 +16,7 @@ router
   .get(protect, getTodo)
   .post(
     protect,
-    [
-      check("title", "Please enter a title.").not().isEmpty(),
-      check("content", "Please enter a content.").not().isEmpty(),
-    ],
+    [check("title", "Please enter a title.").not().isEmpty()],
 
     createTodo
   );

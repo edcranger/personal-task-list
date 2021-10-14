@@ -4,6 +4,7 @@ const Input = styled.input`
   padding: 10px 15px;
   border-radius: ${({ corners }) => (corners ? corners : 0)};
   font-size: var(--fontMed);
+  width: ${({ width }) => (width ? width : "auto")};
   border: 2px solid var(--darkGrey);
   transition: all 0.2s ease-in-out;
 
