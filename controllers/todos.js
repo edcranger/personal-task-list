@@ -73,11 +73,10 @@ exports.createTodo = async (req, res) => {
   }
 };
 
-//@route    DELETE api/todos
+//@route    DELETE api/todos/todoId
 //@desc     Delete a todo
 //@access   Private
 exports.deleteTodo = async (req, res) => {
-  const userId = req.user;
   const todoId = req.params.todoId;
 
   try {
@@ -89,7 +88,7 @@ exports.deleteTodo = async (req, res) => {
         message: "Todo cannot be found.",
       });
 
-    if (todo.user.toString() !== userId)
+    if (todo.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to delete this todo.",
@@ -99,7 +98,9 @@ exports.deleteTodo = async (req, res) => {
 
     res.status(200).json({ success: true, todo: [] });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to delete new todo" });
   }
 };
 
@@ -132,6 +133,39 @@ exports.updateTodo = async (req, res) => {
 
     res.status(200).json({ success: true, todo });
   } catch (err) {
-    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to update new todo" });
+  }
+};
+
+//@route    Update api/todos
+//@desc     Update a todo
+//@access   Private
+exports.dragdropUpdate = async (req, res, next) => {
+  try {
+    let list = [];
+    const items = req.body;
+    items.forEach((item) => {
+      item.todos.forEach((todo) => {
+        list.push({
+          updateOne: {
+            filter: { _id: todo._id },
+            update: {
+              taskColumn: todo.taskColumn,
+              columnIndex: todo.columnIndex,
+            },
+          },
+        });
+      });
+    });
+
+    const updated = await Todos.bulkWrite(list);
+
+    res.status(200).json({ success: true, updated: updated.nModified });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ success: false, message: "Failed to do bulk update" });
   }
 };

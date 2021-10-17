@@ -15,6 +15,7 @@ import {
 
 //context
 import AuthContext from "../../context/auth/authContext";
+import TaskContext from "../../context/tasks/taskContext";
 
 //components
 import { Input, Form } from "../../components/Forms";
@@ -30,6 +31,7 @@ const Login = () => {
   const history = useHistory();
 
   const { login, isAuthenticated, error } = useContext(AuthContext);
+  const { getAllTaskOfUser } = useContext(TaskContext);
 
   const {
     register,
@@ -39,10 +41,12 @@ const Login = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const submitLoginForm = (data) => {
-    login(data);
+  const submitLoginForm = async (data) => {
+    const res = await login(data);
 
-    history.push("/");
+    if (res.success) {
+      /*  getAllTaskOfUser(); */
+    }
   };
 
   useEffect(() => {

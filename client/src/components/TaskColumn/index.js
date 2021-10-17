@@ -58,11 +58,13 @@ const TaskColumn = ({ col, handler }) => {
   const handleDelete = (id) => {
     let newCol = { ...col };
 
-    const wew = newCol.todos.filter((todo) => todo._id !== id);
+    const filteredCol = newCol.todos.filter((todo) => todo._id !== id);
 
-    newCol = { ...newCol, todos: wew };
+    newCol = { ...newCol, todos: filteredCol };
 
-    deleteTodoToColumn(newCol);
+    const payload = { newCol, id };
+
+    deleteTodoToColumn(payload);
   };
   /* ================================= */
 
@@ -83,7 +85,7 @@ const TaskColumn = ({ col, handler }) => {
               {...snapshot}
             >
               {col.todos
-                .sort((a, b) => a.index - b.index)
+                .sort((a, b) => a.columnIndex - b.columnIndex)
                 .map((todo, index) => (
                   <Draggable
                     key={todo._id}

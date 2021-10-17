@@ -36,13 +36,12 @@ const TaskState = (props) => {
   //Get all tasks of user --- in use
   const getAllTaskOfUser = async () => {
     dispatch({ type: SET_LOADING });
-    const res = await Api.get("/api/tasks");
-
-    if (res.data.success) {
-      dispatch({ type: FETCH_USER_TASKS, payload: res.data });
-    }
-
     try {
+      const res = await Api.get("/api/tasks");
+
+      if (res.data.success) {
+        dispatch({ type: FETCH_USER_TASKS, payload: res.data });
+      }
     } catch (err) {
       dispatch({ type: TASKS_FETCH_FAIL, payload: err.response.data.message });
     }

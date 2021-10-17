@@ -27,6 +27,7 @@ const TaskColumnState = ({ children }) => {
 
   const [state, dispatch] = useReducer(taskColumnReducer, initialState);
 
+  /* ====================Fetch all columns of user ==================== */
   const getAllColumns = async (taskId) => {
     dispatch({ type: SET_LOADING });
     try {
@@ -43,6 +44,7 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
+  /* ====================Add new column ==================== */
   const addTaskColumn = async (payload) => {
     const { taskId, newColumm } = payload;
 
@@ -50,8 +52,7 @@ const TaskColumnState = ({ children }) => {
       const res = await Api.post(`/api/tasks/${taskId}/task-column`, newColumm);
 
       if (res.data.success) {
-        console.log(res.data.taskColumn);
-        dispatch({ type: ADD_TASKCOLUMN, payload: res.data });
+        dispatch({ type: ADD_TASKCOLUMN, payload: res.data.taskColumn });
       }
     } catch (err) {
       dispatch({
@@ -61,6 +62,7 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
+  /* ====================Update a column ==================== */
   const updateTaskColumn = async (taskColumn) => {
     try {
       const res = await Api.put(
@@ -79,6 +81,7 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
+  /* ====================Delete a column ==================== */
   const deleteTaskColumn = async (taskColumnId) => {
     try {
       const res = await Api.delete(`/api/task-column/${taskColumnId}`);
@@ -94,9 +97,10 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
+  /* ====================Add a new todo inside acolumn ===================*/
   const addTodoToColumn = async (payload) => {
     const { newCol, newTodo } = payload;
-    console.log(newTodo);
+
     try {
       const res = await Api.post(
         `/api/task-column/${newCol._id}/todos`,
@@ -115,14 +119,41 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
-  /*  ====================================== */
+  /* ===================Delete a new todo inside acolumn ===================*/
+  const deleteTodoToColumn = async (payload) => {
+    const { newCol, id } = payload;
+    try {
+      const res = await Api.delete(`/api/todos/${id}`);
 
-  const updateAllTaskColumns = (cols) => {
-    dispatch({ type: UPDATE_ALL_TASKCOLUMN, payload: cols });
+      if (res.data.success) {
+        dispatch({ type: UPDATE_TASKCOLUMN, payload: newCol });
+      }
+    } catch (err) {
+      dispatch({
+        type: SET_TASKCOLUMN_ERROR,
+        payload: err.response.data.message,
+      });
+    }
   };
 
-  const deleteTodoToColumn = (col) => {
-    dispatch({ type: UPDATE_TASKCOLUMN, payload: col });
+  /*  ====================================== */
+
+  const updateAllTaskColumns = async (payload) => {
+    const { cols } = payload;
+
+    try {
+      const res = await Api.put(`/api/todos/dragdrop`, cols);
+
+      if (res.data.success) {
+        dispatch({ type: UPDATE_ALL_TASKCOLUMN, payload: cols });
+      }
+    } catch (err) {
+      console.log(err);
+      /*      dispatch({
+        type: SET_TASKCOLUMN_ERROR,
+        payload: err.response.data.message,
+      });  */
+    }
   };
 
   return (

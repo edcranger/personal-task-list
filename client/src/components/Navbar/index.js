@@ -39,7 +39,7 @@ const Navbar = ({ title }) => {
 
   const handleClick = () => setClick(!click);
 
-  const { user, logout, loadUser } = useContext(AuthContext);
+  const { user, logout, loadUser, isAuthenticated } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();

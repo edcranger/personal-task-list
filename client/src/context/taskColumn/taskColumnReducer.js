@@ -40,17 +40,16 @@ const taskReducer = (state, action) => {
       return { ...state, currentTaskColumns: newTaskColumns };
 
     case UPDATE_ALL_TASKCOLUMN:
-      const wew = [...state.taskColumns];
+      const wew = [...state.currentTaskColumns];
 
-      action.payload.cols.forEach((col) => {
-        const ind = wew.findIndex((ew) => ew._id === col._id);
-        wew.splice(ind, 1, col);
+      action.payload.forEach((col) => {
+        const index = wew.findIndex((ew) => ew._id === col._id);
+        wew.splice(index, 1, col);
       });
 
       return {
         ...state,
-        taskColumns: wew,
-        currentTaskColumns: action.payload.cols,
+        currentTaskColumns: wew,
       };
 
     case SET_TASKCOLUMN_ERROR:

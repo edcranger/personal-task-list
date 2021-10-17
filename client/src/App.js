@@ -38,13 +38,11 @@ const App = () => {
                 <PageLayout>
                   <Navbar />
                   <PageMainContent>
-                    <Route path="/">
-                      <Switch>
-                        <PrivateRoute exact path="/" component={Home} />
-                        <PrivateRoute path="/task/:taskId" component={Task} />
-                        <PrivateRoute path="*" component={PageNotFound} />
-                      </Switch>
-                    </Route>
+                    <Switch>
+                      <PrivateRoute exact path="/" component={Home} />
+                      <PrivateRoute path="/task/:taskId" component={Task} />
+                      <PrivateRoute path="*" component={PageNotFound} />
+                    </Switch>
                   </PageMainContent>
                 </PageLayout>
               </Switch>

@@ -1,7 +1,6 @@
 import React, { useReducer } from "react";
 import Api from "../../Api";
 import Cookies from "js-cookie";
-import setAuthToken from "../../Utils/setAuthToken";
 
 //context
 import AuthContext from "./authContext";
@@ -16,7 +15,6 @@ import {
   LOGOUT,
   SET_LOADING,
 } from "../types";
-import axios from "axios";
 
 const AuthState = ({ children }) => {
   const initialState = {
@@ -31,10 +29,8 @@ const AuthState = ({ children }) => {
 
   //Load User
   const loadUser = async () => {
-    setAuthToken(state.token);
     try {
-      const res = await axios.get("/api/users/getme");
-
+      const res = await Api.get("/api/users/getme");
       if (res.data.success) {
         dispatch({ type: USER_LOADED, payload: res.data });
       } else {
@@ -64,11 +60,13 @@ const AuthState = ({ children }) => {
   const login = async (formData) => {
     try {
       const res = await Api.post("/api/users/login", formData);
-      dispatch({ type: LOGIN_SUCCESS, payload: res.data });
 
-      return res.data;
+      if (res.data.success) {
+        dispatch({ type: LOGIN_SUCCESS, payload: res.data });
+
+        return res.data;
+      }
     } catch (err) {
-      console.log(err.response.data.message);
       dispatch({ type: REGISTER_FAIL, payload: err.response.data.message });
     }
   };

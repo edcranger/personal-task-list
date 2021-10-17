@@ -28,8 +28,8 @@ const authReducer = (state, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
+        token: action.payload.xcsrf_token,
         isAuthenticated: true,
-        user: action.payload.user,
         error: null,
         loading: false,
       };
@@ -52,7 +52,7 @@ const authReducer = (state, action) => {
       };
 
     case SET_LOADING:
-      return { ...state, loading: action.payload };
+      return { ...state, loading: true };
     default:
       return state;
   }

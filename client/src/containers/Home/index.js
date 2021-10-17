@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
+import AuthContext from "../../context/auth/authContext";
 
 //styles
 import {
@@ -36,8 +37,21 @@ const Home = () => {
     clearFilterTasks,
     filterTasks,
     deleteTask,
+    loading,
     userEditing,
   } = useContext(TaskContext);
+
+  const { isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    getAllTaskOfUser();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (filtered === null) {
+      text.current.value = "";
+    }
+  }, [filtered]);
 
   const handleClick = () => setShowModal(true);
 
@@ -66,17 +80,6 @@ const Home = () => {
       : clearFilterTasks();
   };
 
-  useEffect(() => {
-    getAllTaskOfUser();
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    if (filtered === null) {
-      text.current.value = "";
-    }
-  }, [filtered]);
-
   return (
     <Wrapper>
       <SideSection>
@@ -94,11 +97,11 @@ const Home = () => {
         />
 
         <Grid>
-          {tasks.length === 0 && (
-            <div>
-              <h1>Please Add Task</h1>
-            </div>
-          )}
+          {/*           {tasks.length === 0 && (
+              <div>
+                <h1>Please Add Task</h1>
+              </div>
+            )} */}
 
           {filtered !== null
             ? filtered.map((task) => (

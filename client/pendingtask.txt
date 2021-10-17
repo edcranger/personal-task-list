@@ -20,3 +20,6 @@
 -Form validation.
 -Add task button lost when all items are deleted.
 -Error when clicking navbar burger menu when the taskcolumn menu is being       shown. 
+
+
+

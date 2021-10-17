@@ -9,7 +9,7 @@ import { Wrapper, Grid, BtnContainer, AddBtn } from "./TaskElements";
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
 
 //components
-import TaskColumn from "../../components/TaskColumn/TaskColumn";
+import TaskColumn from "../../components/TaskColumn";
 import Modal from "../../components/Modal";
 import Form from "../../components/Forms/Form";
 import Input from "../../components/Forms/Input";
@@ -88,62 +88,73 @@ const Task = () => {
     const { source, destination } = result;
 
     if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = newColumn.find(
-        (col) => col._id === source.droppableId
-      );
-      const destColumn = newColumn.find(
-        (dest) => dest._id === destination.droppableId
-      );
-      const sourceItems = [...sourceColumn.todos];
+      const sourceItems = [
+        ...newColumn.find((col) => col._id === source.droppableId).todos,
+      ];
 
-      const destItems = [...destColumn.todos];
+      const destItems = [
+        ...newColumn.find((dest) => dest._id === destination.droppableId).todos,
+      ];
       const [removed] = sourceItems.splice(source.index, 1);
 
       destItems.splice(destination.index, 0, removed);
 
-      const newTaskColumns = newColumn
-        .map((col) =>
-          col._id === source.droppableId ? { ...col, todos: sourceItems } : col
-        )
-        .map((col2) =>
-          col2._id === destination.droppableId
-            ? { ...col2, todos: destItems }
-            : col2
-        )
-        .map((col3) => {
-          return {
-            ...col3,
-            todos: col3.todos.map((item, index) => {
-              return { ...item, index, column: col3._id };
-            }),
-          };
-        });
+      const todoSource = newColumn.find(
+        (col) => col._id === source.droppableId
+      );
 
-      updateAllTaskColumns({ taskId: taskId, cols: newTaskColumns });
+      const todoDestination = newColumn.find(
+        (col2) => col2._id === destination.droppableId
+      );
+
+      const todoSrc = {
+        ...todoSource,
+        todos: sourceItems.map((item, index) => {
+          return { ...item, columnIndex: index };
+        }),
+      };
+
+      const todoDesc = {
+        ...todoDestination,
+        todos: destItems.map((item, index) => {
+          return {
+            ...item,
+            columnIndex: index,
+            taskColumn: todoDestination._id,
+          };
+        }),
+      };
+
+      const newPayload = [todoSrc, todoDesc];
+
+      console.log(newPayload);
+
+      updateAllTaskColumns({ taskId: taskId, cols: newPayload });
     } else {
       const newColumn = [...currentTaskColumns];
-      const column = newColumn.find((col) => col._id === source.droppableId);
 
-      const columnItems = [...column.todos];
+      const columnItems = [
+        ...newColumn.find((col) => col._id === source.droppableId).todos,
+      ];
 
       const [removed] = columnItems.splice(source.index, 1);
 
       columnItems.splice(destination.index, 0, removed);
 
-      const newTaskColumns = newColumn
-        .map((col) =>
-          col._id === source.droppableId ? { ...col, todos: columnItems } : col
-        )
-        .map((col2) => {
-          return {
-            ...col2,
-            todos: col2.todos.map((item, index) => {
-              return { ...item, index, column: col2._id };
-            }),
-          };
-        });
+      const todoSource = newColumn.find(
+        (col) => col._id === source.droppableId
+      );
 
-      updateAllTaskColumns({ taskId: taskId, cols: newTaskColumns });
+      const todoSrc = {
+        ...todoSource,
+        todos: columnItems.map((item, index) => {
+          return { ...item, columnIndex: index, taskColumn: todoSource._id };
+        }),
+      };
+
+      const newPayload = [todoSrc];
+
+      updateAllTaskColumns({ taskId: taskId, cols: newPayload });
     }
   };
 
