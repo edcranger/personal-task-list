@@ -1,7 +1,11 @@
 const router = require("express").Router({ mergeParams: true });
 const { check } = require("express-validator");
-const { protect } = require("../middleware/auth");
 
+//middleware
+const { protect } = require("../middleware/auth");
+const { gateKeeper } = require("../middleware/gatekeeper");
+
+//mount contontrollers
 const {
   getTodo,
   createTodo,
@@ -10,17 +14,27 @@ const {
   dragdropUpdate,
 } = require("../controllers/todos");
 
+//mount 3rd party routes
+const todoContentRoutes = require("./todoContents");
+
+//merged routes
+router.use("/:todoId/todo-contents", todoContentRoutes);
+
+//main routes
 router.route("/dragdrop").put(dragdropUpdate);
 
-router.route("/:todoId").put(protect, updateTodo).delete(protect, deleteTodo);
+router
+  .route("/:todoId")
+  .put(protect, gateKeeper("todoId"), updateTodo)
+  .delete(protect, gateKeeper("todoId"), deleteTodo);
 
 router
   .route("/")
-  .get(protect, getTodo)
+  .get(protect, gateKeeper("taskColumnId"), getTodo)
   .post(
-    protect,
     [check("title", "Please enter a title.").not().isEmpty()],
-
+    protect,
+    gateKeeper("taskColumnId"),
     createTodo
   );
 

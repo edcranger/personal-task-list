@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useCallback } from "react";
 import Api from "../../Api";
 
 //Context and reducers
@@ -34,7 +34,7 @@ const TaskState = (props) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
   //Get all tasks of user --- in use
-  const getAllTaskOfUser = async () => {
+  const getAllTaskOfUser = useCallback(async () => {
     dispatch({ type: SET_LOADING });
     try {
       const res = await Api.get("/api/tasks");
@@ -45,7 +45,7 @@ const TaskState = (props) => {
     } catch (err) {
       dispatch({ type: TASKS_FETCH_FAIL, payload: err.response.data.message });
     }
-  };
+  }, []);
 
   //Add Task
   const addTask = async (task) => {

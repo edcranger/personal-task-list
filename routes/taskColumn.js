@@ -1,6 +1,7 @@
 const router = require("express").Router({ mergeParams: true });
 const { check } = require("express-validator");
 const { protect } = require("../middleware/auth");
+const { gateKeeper } = require("../middleware/gatekeeper");
 
 const {
   adminGetTaskColumns,
@@ -16,17 +17,18 @@ router.use("/:taskColumnId/todos", todosRouter);
 
 router
   .route("/:taskColumnId")
-  .put(protect, updateTaskColumn)
-  .delete(protect, deleteTaskColumns);
+  .put(protect, gateKeeper("taskColumnId"), updateTaskColumn)
+  .delete(protect, gateKeeper("taskColumnId"), deleteTaskColumns);
 
 router.route("/admin-allColumns").get(protect, adminGetTaskColumns);
 
 router
   .route("/")
-  .get(protect, getTaskColumns)
+  .get(protect, gateKeeper("taskId"), getTaskColumns)
   .post(
-    protect,
     [check("columnName", "Please enter a title.").not().isEmpty()],
+    protect,
+    gateKeeper("taskId"),
     createTaskColumn
   );
 

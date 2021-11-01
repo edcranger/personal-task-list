@@ -1,8 +1,14 @@
 const router = require("express").Router();
-const { check, validationResult } = require("express-validator");
+const { check } = require("express-validator");
 const { protect } = require("../middleware/auth");
 
-const { register, login, getUser } = require("../controllers/users");
+//controllers
+const {
+  register,
+  login,
+  getUser,
+  searchUser,
+} = require("../controllers/users");
 
 router
   .route("/login")
@@ -15,6 +21,8 @@ router
   );
 
 router.route("/getme").get(protect, getUser);
+
+router.route("/search/:userId").get(protect, searchUser);
 
 router
   .route("/")

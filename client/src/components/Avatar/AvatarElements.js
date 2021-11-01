@@ -1,29 +1,33 @@
 import styled from "styled-components";
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: flex;
   align-items: center;
   padding: 10px 0;
 `;
 
-const AvatarPhoto = styled.img`
+export const AvatarPhoto = styled.img`
   border-radius: 50%;
   width: 100%;
   max-width: 35px;
 `;
 
-const AvatarName = styled.h1`
+export const AvatarLetter = styled.div`
+  background: green;
+  color: var(--white);
+  font-weight: bold;
+  height: 40px;
+  width: 40px;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const AvatarName = styled.h1`
   font-size: var(--fontSmall);
   color: var(--darkgrey);
   margin-left: 20px;
 `;
-
-export const AvatarComponent = ({ src, name }) => {
-  return (
-    <Wrapper>
-      <AvatarPhoto src={src} />
-      <AvatarName>{name}</AvatarName>
-    </Wrapper>
-  );
-};

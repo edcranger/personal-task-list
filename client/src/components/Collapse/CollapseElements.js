@@ -1,8 +1,6 @@
 import styled from "styled-components";
-import { AiOutlineCaretDown } from "react-icons/ai";
-import React, { useState } from "react";
 
-export const CollapseWrapper = styled.ul`
+export const CollapseWrapper = styled.div`
   list-style: none;
   border: 1px solid var(--lightGrey);
   padding: 0;
@@ -21,38 +19,26 @@ export const CollapseContent = styled.li`
 `;
 
 export const CollapseCard = styled.div`
-  height: ${(props) => (props.collapse ? "0" : "300px")};
+  height: ${(props) => (props.collapse ? "0" : "auto")};
   opacity: ${(props) => (props.collapse ? "0" : "1")};
   width: 100%;
   padding: 0 10px;
-  border-bottom: 1px solid var(--lightGrey);
-  transition: all 0.5s ease-in-out;
+
+  transition: all 0.3s ease-in-out;
 `;
 
-const CollapseItemsHeader = styled.div`
+export const CollapseItemsHeader = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding: 10px;
+
+  h4 {
+    margin: 0;
+  }
 
   :hover {
     cursor: pointer;
     background: rgba(0, 0, 0, 0.03);
   }
 `;
-
-export const CollapseItem = ({ label, children }) => {
-  const [collapse, setCollapse] = useState(true);
-
-  const handleClick = () => setCollapse(!collapse);
-
-  return (
-    <CollapseContent>
-      <CollapseItemsHeader onClick={handleClick}>
-        <div>{label}</div>
-        <AiOutlineCaretDown />
-      </CollapseItemsHeader>
-      {React.cloneElement(children, { collapse })}
-    </CollapseContent>
-  );
-};

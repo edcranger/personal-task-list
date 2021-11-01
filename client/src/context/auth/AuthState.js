@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useCallback } from "react";
 import Api from "../../Api";
 import Cookies from "js-cookie";
 
@@ -14,6 +14,8 @@ import {
   USER_LOADED,
   LOGOUT,
   SET_LOADING,
+  SEARCH_USER,
+  SET_USER_ERROR,
 } from "../types";
 
 const AuthState = ({ children }) => {
@@ -23,12 +25,13 @@ const AuthState = ({ children }) => {
     user: null,
     loading: true,
     error: null,
+    searchedUser: null,
   };
 
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   //Load User
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
       const res = await Api.get("/api/users/getme");
       if (res.data.success) {
@@ -39,7 +42,7 @@ const AuthState = ({ children }) => {
     } catch (err) {
       dispatch({ type: REGISTER_FAIL, payload: err.response.data.message });
     }
-  };
+  }, []);
 
   //Register User
   const signup = async (formData) => {
@@ -78,8 +81,29 @@ const AuthState = ({ children }) => {
     Cookies.remove("csrf_id");
   };
 
+  const searchUser = async (userId) => {
+    dispatch({ type: SET_LOADING });
+    console.log();
+    try {
+      if (userId.length < 3) {
+        return dispatch({ type: SEARCH_USER, payload: [] });
+      }
+      const res = await Api.get(`/api/users/search/${userId}`);
+
+      if (res.data.success) {
+        dispatch({ type: SEARCH_USER, payload: res.data.user });
+      } else {
+        dispatch({ type: SEARCH_USER, payload: [] });
+      }
+    } catch (err) {
+      dispatch({ type: SET_USER_ERROR, payload: err.response.data.message });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, signup, login, loadUser, logout }}>
+    <AuthContext.Provider
+      value={{ ...state, signup, login, loadUser, logout, searchUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

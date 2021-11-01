@@ -22,6 +22,8 @@ const TaskForm = ({ setShowModal, currTask }) => {
   const { addTask, updateTask, isEditing, currentTask } = taskContext;
   const [taskData, setTaskData] = useState({});
 
+  const SelectData = ["", "personal", "group"];
+
   const {
     register,
     handleSubmit,
@@ -38,6 +40,7 @@ const TaskForm = ({ setShowModal, currTask }) => {
         taskTitle: currTask.taskTitle,
         description: currTask.description,
         category: currTask.category,
+        type: currTask.taskType,
       });
     }
   }, [isEditing, currentTask, currTask, reset]);
@@ -69,6 +72,7 @@ const TaskForm = ({ setShowModal, currTask }) => {
           <p>{errors.taskTitle?.message}</p>
           <p>{errors.description?.message}</p>
           <p>{errors.category?.message}</p>
+          <p>{errors.tasktype?.message}</p>
         </ErrorContainer>
 
         <TaskInput
@@ -99,6 +103,18 @@ const TaskForm = ({ setShowModal, currTask }) => {
           <option className="custom-option" value="Todo">
             Todo
           </option>
+        </CategoriesForm>
+
+        <CategoriesForm
+          {...register("taskType")}
+          value={taskData.taskType}
+          onChange={handleChange}
+        >
+          {SelectData.map((item, index) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
         </CategoriesForm>
 
         <div>

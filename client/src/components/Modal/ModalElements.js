@@ -17,6 +17,7 @@ export const Wrapper = styled.div`
   width: auto;
   max-width: 90vw;
   min-width: 50vw;
+  min-height: 30vh;
   background: var(--white);
   border-radius: 10px;
   padding: 10px 20px;

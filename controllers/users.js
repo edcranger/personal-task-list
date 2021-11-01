@@ -1,6 +1,8 @@
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const User = require("../models/Users");
 const { nanoid } = require("nanoid");
+const ObjectId = require("mongoose").Types.ObjectId;
+const e = require("express");
 
 //@route    GET api/users
 //@desc     Get logged in  user
@@ -50,13 +52,14 @@ exports.login = async (req, res) => {
 //@access   Private
 exports.register = async (req, res, next) => {
   const { full_name, email, password } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     let user = await User.findOne({ email });
 
     if (user) return res.status(400).json({ message: "User already exist" });
@@ -68,6 +71,26 @@ exports.register = async (req, res, next) => {
     });
 
     sendTokenResponse(user, 200, res);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+//@route    POST api/users/search
+//@desc     POST search for users
+//@access   Private
+exports.searchUser = async (req, res, next) => {
+  const userId = req.params.userId;
+  let user;
+
+  try {
+    !ObjectId.isValid(userId)
+      ? (user = await User.find({
+          full_name: { $regex: userId, $options: "i" },
+        }))
+      : (user = await User.find({ _id: userId }));
+
+    res.status(200).json({ success: true, user });
   } catch (err) {
     return next(err);
   }

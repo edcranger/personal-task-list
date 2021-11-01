@@ -1,7 +1,5 @@
-const mongoose = require("mongoose");
 const Todos = require("../models/Todos");
 const { validationResult } = require("express-validator");
-const { SchemaTypeOptions } = require("mongoose");
 
 //@route    GET api/todos
 //@desc     Get all todos in the database

@@ -15,7 +15,6 @@ import {
 
 //context
 import AuthContext from "../../context/auth/authContext";
-import TaskContext from "../../context/tasks/taskContext";
 
 //components
 import { Input, Form } from "../../components/Forms";
@@ -31,8 +30,6 @@ const Login = () => {
   const history = useHistory();
 
   const { login, isAuthenticated, error } = useContext(AuthContext);
-  const { getAllTaskOfUser } = useContext(TaskContext);
-
   const {
     register,
     handleSubmit,

@@ -11,9 +11,12 @@ const {
 
 //Include other resource routers
 const taskColumnRouter = require("../routes/taskColumn");
+const contributorsRouter = require("../routes/contributors");
 
 //import router for task-column so that taskId can be used to that route
 router.use("/:taskId/task-column", taskColumnRouter);
+
+router.use("/:taskId/contributors", contributorsRouter);
 
 router.route("/:taskId").put(protect, updateTask).delete(protect, deleteTask);
 

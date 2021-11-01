@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useCallback } from "react";
 import Api from "../../Api";
 
 import { taskColumns } from "../../data/data";
@@ -28,7 +28,7 @@ const TaskColumnState = ({ children }) => {
   const [state, dispatch] = useReducer(taskColumnReducer, initialState);
 
   /* ====================Fetch all columns of user ==================== */
-  const getAllColumns = async (taskId) => {
+  const getAllColumns = useCallback(async (taskId) => {
     dispatch({ type: SET_LOADING });
     try {
       const res = await Api.get(`/api/tasks/${taskId}/task-column`);
@@ -42,7 +42,7 @@ const TaskColumnState = ({ children }) => {
         payload: err.response.data.message,
       });
     }
-  };
+  }, []);
 
   /* ====================Add new column ==================== */
   const addTaskColumn = async (payload) => {

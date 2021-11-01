@@ -8,6 +8,11 @@
 5. fix loading system
 6. Add task and edit task inputs overlap within the modal
 7. Add error handler in the API 
+8. Fix the task column- it keeps on showing different task columns.
+
+
+==========================Priority=========================
+1.Create a endpoint in searching members. 
 
 
 
@@ -20,6 +25,41 @@
 -Form validation.
 -Add task button lost when all items are deleted.
 -Error when clicking navbar burger menu when the taskcolumn menu is being       shown. 
+-Create a middleware for check if the user can update a task. (user || contributor)
+ 
+
+
+------Task contributor function-------
+Problems: 
+     1. How to add someone to the task? - done
+    -soln:
+        Done - 1. Create a contributors model Contributors: [{contributorId,    status: ('invited', 'accepted', declined, retired), dateInvited, dateAccepted, dateRetired}] 
+
+     2. How to reflect that to user that he was invited to the task? - done
+    -soln: 
+        1. Create an endpoint /api/getInvites/ 
+    
+
+    3. How to accept or not accept task by someon - done
+    Done - Accepting
+    DOne -  Decline
+
+    4. How show all contributors of task - done
+    -soln: populate with users that has a status of contributors.status === accepted
+
+    5. How to show all assigned tasks of users - done
+    - after fetching all user created task, query all task where he is a contributor then mix it in one array? or separate it  by creating a personal task and group task?
+
+    [...{personal task}, ...{assigned task}] i think separating is much better. 
+    [...{assigned task}], [...{personal task}]
+
+6. Create function that allow contributors to update the task(authentication).
+    soln: this will a middleware
+    
+
+
+
+
 
 
 

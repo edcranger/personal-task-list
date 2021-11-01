@@ -6,6 +6,8 @@ import {
   USER_LOADED,
   SET_LOADING,
   LOGOUT,
+  SEARCH_USER,
+  SET_USER_ERROR,
 } from "../types";
 
 const authReducer = (state, action) => {
@@ -50,9 +52,13 @@ const authReducer = (state, action) => {
         user: action.payload.user,
         loading: false,
       };
+    case SEARCH_USER:
+      return { ...state, loading: false, searchedUser: action.payload };
 
     case SET_LOADING:
       return { ...state, loading: true };
+    case SET_USER_ERROR:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

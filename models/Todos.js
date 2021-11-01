@@ -19,10 +19,6 @@ const TodoSchema = mongoose.Schema({
     type: String,
     maxLength: [30, "Content cannot be more than 30 characters."],
   },
-  content: {
-    type: String,
-    maxLength: [500, "Content cannot be more than 500 characters."],
-  },
   status: {
     type: String,
     enum: ["pending", "inprogress ", "completed"],

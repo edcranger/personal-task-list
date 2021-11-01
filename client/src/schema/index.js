@@ -4,6 +4,7 @@ const taskSchema = yup.object().shape({
   taskTitle: yup.string().required("Task name is required."),
   description: yup.string().required().max(50).min(7),
   category: yup.string().required(),
+  taskType: yup.string().required(),
 });
 
 const userSchema = yup.object().shape({

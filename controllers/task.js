@@ -5,9 +5,14 @@ const Tasks = require("../models/Tasks");
 //@access   Private
 exports.getUsersTasks = async (req, res) => {
   try {
-    const task = await Tasks.find({ user: req.user._id }).populate(
-      "task-columns"
-    );
+    const task = await Tasks.find({ user: req.user._id }).populate([
+      { path: "task-columns" },
+      {
+        path: "contributors",
+        select: "contributor",
+        match: { status: "accepted" },
+      },
+    ]);
 
     res.status(200).json({ success: true, task, count: task.length });
   } catch (err) {
@@ -20,9 +25,9 @@ exports.getUsersTasks = async (req, res) => {
 //@access   Private
 exports.createTask = async (req, res) => {
   try {
-    const { taskTitle, description, user } = req.body;
+    const { taskTitle, description, taskType } = req.body;
+    console.log(req.body);
     let task = await Tasks.findOne({ taskTitle });
-
     if (task)
       return res
         .status(400)
@@ -31,6 +36,7 @@ exports.createTask = async (req, res) => {
     task = await Tasks.create({
       taskTitle,
       description,
+      taskType: taskType.toLowerCase(),
       user: req.user._id,
     });
 

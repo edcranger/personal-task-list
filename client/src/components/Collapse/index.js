@@ -1,27 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import { AiOutlineCaretDown, AiOutlineCaretUp } from "react-icons/ai";
 
-//styles
 import {
-  CollapseWrapper,
-  CollapseItem,
+  CollapseContent,
+  CollapseItemsHeader,
   CollapseCard,
 } from "./CollapseElements";
 
-const Collapse = () => {
+const CollapseItem = ({ label, children }) => {
+  const [collapse, setCollapse] = useState(false);
+
+  const handleClick = () => setCollapse(!collapse);
   return (
-    <CollapseWrapper>
-      <CollapseItem label="Header">
-        <CollapseCard>
-          <p>wew</p>
-        </CollapseCard>
-      </CollapseItem>
-      <CollapseItem label="Header">
-        <CollapseCard>
-          <p>wew</p>
-        </CollapseCard>
-      </CollapseItem>
-    </CollapseWrapper>
+    <CollapseContent>
+      <CollapseItemsHeader onClick={handleClick}>
+        <h4>{label}</h4>
+        {collapse ? <AiOutlineCaretUp /> : <AiOutlineCaretDown />}
+      </CollapseItemsHeader>
+      <CollapseCard collapse={collapse}>{children}</CollapseCard>
+
+      {/* {React.cloneElement(children, { collapse })} */}
+    </CollapseContent>
   );
 };
 
-export default Collapse;
+export default CollapseItem;

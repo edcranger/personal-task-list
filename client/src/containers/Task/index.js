@@ -1,12 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
 //styles
-import { Wrapper, Grid, BtnContainer, AddBtn } from "./TaskElements";
+import {
+  Wrapper,
+  Grid,
+  BtnContainer,
+  AddBtn,
+  SideSection,
+  MainSection,
+  SearchUserWrapper,
+} from "./TaskElements";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
+import AuthContext from "../../context/auth/authContext";
 
 //components
 import TaskColumn from "../../components/TaskColumn";
@@ -14,6 +24,16 @@ import Modal from "../../components/Modal";
 import Form from "../../components/Forms/Form";
 import Input from "../../components/Forms/Input";
 import Button from "../../components/Button";
+import Collapse from "../../components/Collapse";
+import Avatar from "../../components/Avatar";
+
+//hooks
+import useDebounce from "../../Hooks/useDebounce";
+
+//utils
+import DragdropFxn from "../../Utils/Dragdrop";
+
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 const Task = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +44,10 @@ const Task = () => {
 
   const { taskId } = useParams();
 
+  const [searchText, setSearchText] = useState("");
+
+  const text = useRef("");
+
   const {
     currentTaskColumns,
     getAllColumns,
@@ -32,6 +56,8 @@ const Task = () => {
     deleteTaskColumn,
     updateAllTaskColumns,
   } = useContext(TaskColumnContext);
+
+  const { searchUser, searchedUser } = useContext(AuthContext);
 
   const submitAddTaskColumn = (e) => {
     setError("");
@@ -60,6 +86,7 @@ const Task = () => {
     }
     setContentType(type);
     setShowModal(true);
+    setSearchText("");
   };
 
   const confirmDelete = () => {
@@ -75,6 +102,14 @@ const Task = () => {
     setTaskColumn({ ...taskColumn, [name]: value });
   };
 
+  const searchUserHandler = (e) => {
+    text.current.value !== ""
+      ? setSearchText(e.target.value)
+      : setSearchText("");
+  };
+
+  useDebounce(() => searchUser(searchText), 1000, [searchText]);
+
   const onUpdateSubmit = (e) => {
     e.preventDefault();
 
@@ -82,80 +117,7 @@ const Task = () => {
   };
 
   const onDragEnd = (result) => {
-    const newColumn = [...currentTaskColumns];
-    if (!result.destination) return;
-
-    const { source, destination } = result;
-
-    if (source.droppableId !== destination.droppableId) {
-      const sourceItems = [
-        ...newColumn.find((col) => col._id === source.droppableId).todos,
-      ];
-
-      const destItems = [
-        ...newColumn.find((dest) => dest._id === destination.droppableId).todos,
-      ];
-      const [removed] = sourceItems.splice(source.index, 1);
-
-      destItems.splice(destination.index, 0, removed);
-
-      const todoSource = newColumn.find(
-        (col) => col._id === source.droppableId
-      );
-
-      const todoDestination = newColumn.find(
-        (col2) => col2._id === destination.droppableId
-      );
-
-      const todoSrc = {
-        ...todoSource,
-        todos: sourceItems.map((item, index) => {
-          return { ...item, columnIndex: index };
-        }),
-      };
-
-      const todoDesc = {
-        ...todoDestination,
-        todos: destItems.map((item, index) => {
-          return {
-            ...item,
-            columnIndex: index,
-            taskColumn: todoDestination._id,
-          };
-        }),
-      };
-
-      const newPayload = [todoSrc, todoDesc];
-
-      console.log(newPayload);
-
-      updateAllTaskColumns({ taskId: taskId, cols: newPayload });
-    } else {
-      const newColumn = [...currentTaskColumns];
-
-      const columnItems = [
-        ...newColumn.find((col) => col._id === source.droppableId).todos,
-      ];
-
-      const [removed] = columnItems.splice(source.index, 1);
-
-      columnItems.splice(destination.index, 0, removed);
-
-      const todoSource = newColumn.find(
-        (col) => col._id === source.droppableId
-      );
-
-      const todoSrc = {
-        ...todoSource,
-        todos: columnItems.map((item, index) => {
-          return { ...item, columnIndex: index, taskColumn: todoSource._id };
-        }),
-      };
-
-      const newPayload = [todoSrc];
-
-      updateAllTaskColumns({ taskId: taskId, cols: newPayload });
-    }
+    DragdropFxn(currentTaskColumns, result, updateAllTaskColumns, taskId);
   };
 
   useEffect(() => {
@@ -165,83 +127,127 @@ const Task = () => {
       setShowModal(false);
       setContentType("");
     };
-    // eslint-disable-next-line
-  }, [taskId]);
+  }, [taskId, getAllColumns]);
 
-  if (!currentTaskColumns) {
-    return <h1>Loading....</h1>;
-  } else {
-    return (
-      <Wrapper>
-        <Grid>
-          <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-            {currentTaskColumns.map((col) => {
-              return <TaskColumn key={col._id} col={col} handler={handler} />;
-            })}
-          </DragDropContext>
+  return (
+    <Wrapper>
+      <SideSection>
+        <Collapse label="Categories">
+          <Link to="/">
+            <h4>Programming</h4>
+          </Link>
+          <Link to="/">
+            <h4>Utilities</h4>
+          </Link>
+        </Collapse>
 
-          <BtnContainer>
-            <AddBtn onClick={() => handler({ type: "add" })} />
-          </BtnContainer>
-        </Grid>
+        <Collapse label="Contributors">
+          <Button
+            border="none"
+            hoverFontColor="var(--success)"
+            onClick={() => handler({ type: "addContributor" })}
+          >
+            <AiOutlineUsergroupAdd size="20" corners="20" />
+            Add Contributor
+          </Button>
+          <Avatar name="Edison Ocampo" />
+          <Avatar name="Mae Anne Tribunal" />
+        </Collapse>
+      </SideSection>
+      <MainSection>
+        {error && <h1>{error}</h1>}
+        {currentTaskColumns && (
+          <Grid>
+            <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+              {currentTaskColumns.map((col) => {
+                return <TaskColumn key={col._id} col={col} handler={handler} />;
+              })}
+            </DragDropContext>
 
-        {/* ======================MODAL AREA======================= */}
-        <Modal showModal={showModal} setShowModal={setShowModal}>
-          {contentType === "add" && (
-            <Form onSubmit={submitAddTaskColumn}>
-              <Input
-                width="100%"
-                corners="10px"
-                placeholder="Column Name"
-                value={columnName}
-                onChange={(e) => setColumnName(e.target.value)}
-              />
+            <BtnContainer>
+              <AddBtn onClick={() => handler({ type: "add" })} />
+            </BtnContainer>
+          </Grid>
+        )}
+      </MainSection>
 
-              <BtnContainer>
-                <Button hoverColor="var(--success)" border="none" type="submit">
-                  Create Column
-                </Button>
-              </BtnContainer>
-            </Form>
-          )}
+      {/* ======================MODAL AREA======================= */}
+      <Modal showModal={showModal} setShowModal={setShowModal}>
+        {contentType === "add" && (
+          <Form onSubmit={submitAddTaskColumn}>
+            <Input
+              width="100%"
+              corners="10px"
+              placeholder="Column Name"
+              value={columnName}
+              onChange={(e) => setColumnName(e.target.value)}
+            />
 
-          {contentType === "update" && (
-            <Form onSubmit={onUpdateSubmit}>
-              <Input
-                type="text"
-                name="columnName"
-                value={taskColumn.columnName}
-                onChange={handleUpdate}
-                width="100%"
-                corners="10px"
-              />
-            </Form>
-          )}
-
-          {contentType === "delete" && (
-            <div>
-              <h3>Are you sure you want to delete this todo?</h3>
-              <Button
-                border="none"
-                hoverColor="var(--danger)"
-                onClick={confirmDelete}
-              >
-                Yes
+            <BtnContainer>
+              <Button hoverColor="var(--success)" border="none" type="submit">
+                Create Column
               </Button>
+            </BtnContainer>
+          </Form>
+        )}
 
-              <Button
-                border="none"
-                hoverColor="var(--warning)"
-                onClick={() => setShowModal(false)}
-              >
-                No
-              </Button>
-            </div>
-          )}
-        </Modal>
-      </Wrapper>
-    );
-  }
+        {contentType === "update" && (
+          <Form onSubmit={onUpdateSubmit}>
+            <Input
+              type="text"
+              name="columnName"
+              value={taskColumn.columnName}
+              onChange={handleUpdate}
+              width="100%"
+              corners="10px"
+            />
+          </Form>
+        )}
+
+        {contentType === "delete" && (
+          <div>
+            <h3>Are you sure you want to delete this todo?</h3>
+            <Button
+              border="none"
+              hoverColor="var(--danger)"
+              onClick={confirmDelete}
+            >
+              Yes
+            </Button>
+
+            <Button
+              border="none"
+              hoverColor="var(--warning)"
+              onClick={() => setShowModal(false)}
+            >
+              No
+            </Button>
+          </div>
+        )}
+
+        {contentType === "addContributor" && (
+          <div>
+            <SearchUserWrapper>
+              <Input
+                corners="10px"
+                placeholder="Member Id or Name"
+                width="100%"
+                onChange={searchUserHandler}
+                ref={text}
+                type={text}
+              />
+            </SearchUserWrapper>
+
+            {searchedUser
+              ? searchedUser.map((user) => (
+                  <div key={user._id}>{user.full_name}</div>
+                ))
+              : null}
+          </div>
+        )}
+      </Modal>
+    </Wrapper>
+  );
 };
 
 export default Task;

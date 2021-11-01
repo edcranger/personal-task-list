@@ -44,3 +44,5 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const LOGOUT = "LOGOUT";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
+export const SET_USER_ERROR = "SET_USER_ERROR";
+export const SEARCH_USER = "SEARCH_USER";

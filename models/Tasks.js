@@ -24,6 +24,11 @@ const TaskSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    taskType: {
+      type: String,
+      enum: ["personal", "group"],
+      required: [true, "Please add a task type"],
+    },
     date: {
       type: Date,
       default: Date.now,
@@ -35,9 +40,25 @@ const TaskSchema = mongoose.Schema(
   }
 );
 
+//cascade delete task column, todo and todo contents
+TaskSchema.pre("remove", async function (next) {
+  await this.model("Task-Column").deleteMany({ task: this._id });
+  await this.model("Todo").deleteMany({ task: this._id });
+  await this.model("Todo-Content").deleteMany({ task: this._id });
+  await this.model("Contributor").deleteMany({ task: this._id });
+  next();
+});
+
 //reverse populate with virtuals
 TaskSchema.virtual("task-columns", {
   ref: "Task-Column",
+  localField: "_id",
+  foreignField: "task",
+  justOne: false,
+});
+
+TaskSchema.virtual("contributors", {
+  ref: "Contributor",
   localField: "_id",
   foreignField: "task",
   justOne: false,

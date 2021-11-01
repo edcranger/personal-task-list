@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import { Link } from "react-router-dom";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
@@ -37,7 +38,6 @@ const Home = () => {
     clearFilterTasks,
     filterTasks,
     deleteTask,
-    loading,
     userEditing,
   } = useContext(TaskContext);
 
@@ -45,7 +45,7 @@ const Home = () => {
 
   useEffect(() => {
     getAllTaskOfUser();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getAllTaskOfUser]);
 
   useEffect(() => {
     if (filtered === null) {
@@ -83,8 +83,15 @@ const Home = () => {
   return (
     <Wrapper>
       <SideSection>
-        <Avatar />
-        <Collapse />
+        <Avatar name="Edison Ocampo" />
+        <Collapse label="Categories">
+          <Link to="/">
+            <h4>Personal</h4>
+          </Link>
+          <Link to="/">
+            <h4>Group</h4>
+          </Link>
+        </Collapse>
       </SideSection>
       <MainSection>
         {/* This is the Filter search bar */}
