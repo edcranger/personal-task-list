@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  Fragment,
+} from "react";
 import { Link } from "react-router-dom";
 
 //context
 import TaskContext from "../../context/tasks/taskContext";
 import AuthContext from "../../context/auth/authContext";
+import ContributorContext from "../../context/contributors/contributorContext";
 
 //styles
 import {
@@ -13,6 +20,8 @@ import {
   Grid,
   AddTask,
   AddBtn,
+  Item,
+  Name,
 } from "./HomeElements";
 
 //conponents
@@ -41,9 +50,11 @@ const Home = () => {
     userEditing,
   } = useContext(TaskContext);
 
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
+  const { getContributions, contributions } = useContext(ContributorContext);
 
   useEffect(() => {
+    getContributions();
     getAllTaskOfUser();
   }, [isAuthenticated, getAllTaskOfUser]);
 
@@ -83,7 +94,15 @@ const Home = () => {
   return (
     <Wrapper>
       <SideSection>
-        <Avatar name="Edison Ocampo" />
+        <Item>
+          {user ? (
+            <Fragment>
+              <Avatar name={user.full_name} />
+              <Name>{user.full_name}</Name>
+            </Fragment>
+          ) : null}
+        </Item>
+
         <Collapse label="Categories">
           <Link to="/">
             <h4>Personal</h4>
@@ -114,9 +133,11 @@ const Home = () => {
             ? filtered.map((task) => (
                 <TaskItems key={task._id} task={task} handler={handler} />
               ))
-            : tasks.map((task) => (
-                <TaskItems key={task._id} task={task} handler={handler} />
-              ))}
+            : [...tasks, ...[...contributions].map((cont) => cont.task)].map(
+                (task) => (
+                  <TaskItems key={task._id} task={task} handler={handler} />
+                )
+              )}
         </Grid>
 
         <AddTask>

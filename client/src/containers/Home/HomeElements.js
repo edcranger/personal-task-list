@@ -63,3 +63,15 @@ export const AddBtn = styled(IoAddCircle)`
     transform: scale(1.2);
   }
 `;
+
+export const Item = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+`;
+
+export const Name = styled.p`
+  margin-left: 0.6rem;
+  font-size: 1rem;
+  font-weight: normal;
+`;

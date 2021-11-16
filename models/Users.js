@@ -1,27 +1,36 @@
-const mongoose = require("mongoose"),
+const { Schema, model } = require("mongoose"),
   bcrypt = require("bcrypt"),
   jwt = require("jsonwebtoken");
 
-const UserSchema = mongoose.Schema({
-  full_name: {
-    type: String,
-    require: [true, "Please enter a valid name"],
+const UserSchema = new Schema(
+  {
+    full_name: {
+      type: String,
+      require: [true, "Please enter a valid name"],
+    },
+    email: {
+      type: String,
+      require: [true, "Please enter a valid name"],
+      unique: [
+        true,
+        "Email address already been used, please enter a new one.",
+      ],
+    },
+    password: {
+      type: String,
+      require: [true, "Please enter a valid password"],
+      select: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  email: {
-    type: String,
-    require: [true, "Please enter a valid name"],
-    unique: [true, "Email address already been used, please enter a new one."],
-  },
-  password: {
-    type: String,
-    require: [true, "Please enter a valid password"],
-    select: false,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
@@ -45,4 +54,11 @@ UserSchema.methods.isPasswordMatch = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", UserSchema);
+UserSchema.virtual("assignedTasks", {
+  ref: "Contributor",
+  localField: "_id",
+  foreignField: "contributor",
+  justOne: false,
+});
+
+module.exports = model("User", UserSchema);

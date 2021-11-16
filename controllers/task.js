@@ -1,9 +1,11 @@
 const Tasks = require("../models/Tasks");
+const ErrorResponse = require("../utils/errorResponse");
+const { validationResult } = require("express-validator");
 
 //@route    GET api/tasks
 //@desc     Get all todos in the database
 //@access   Private
-exports.getUsersTasks = async (req, res) => {
+exports.getUsersTasks = async (req, res, next) => {
   try {
     const task = await Tasks.find({ user: req.user._id }).populate([
       { path: "task-columns" },
@@ -16,59 +18,60 @@ exports.getUsersTasks = async (req, res) => {
 
     res.status(200).json({ success: true, task, count: task.length });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
 //@route    POST api/todos
 //@desc     Post a todo
 //@access   Private
-exports.createTask = async (req, res) => {
+exports.createTask = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array() });
+  }
+
   try {
     const { taskTitle, description, taskType } = req.body;
     console.log(req.body);
     let task = await Tasks.findOne({ taskTitle });
+
     if (task)
-      return res
-        .status(400)
-        .json({ success: false, message: "Task name is already been used." });
+      return next(new ErrorResponse(`Task name is already been used.`, 400));
 
     task = await Tasks.create({
       taskTitle,
       description,
-      taskType: taskType.toLowerCase(),
+      taskType: taskType,
       user: req.user._id,
     });
 
     res.status(200).json({ success: true, task });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Something's wrong with creating a task.",
-    });
+    next(err);
   }
 };
 
 //@route    Update api/todos
 //@desc     Update a todo
 //@access   Private
-exports.updateTask = async (req, res) => {
+exports.updateTask = async (req, res, next) => {
   const taskId = req.params.taskId;
 
   try {
     let task = await Tasks.findById(taskId);
 
     if (!task)
-      return res.status(401).json({
-        success: false,
-        message: "Task cannot be found.",
-      });
+      return next(
+        new ErrorResponse(`Cannot find task with ID of ${taskId}.`, 404)
+      );
 
-    if (task.user.toString() !== req.user._id.toString())
+    /*     if (task.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to Update this todo.",
-      });
+      }); */
 
     todo = await Tasks.findByIdAndUpdate(taskId, req.body, {
       new: true,
@@ -77,35 +80,36 @@ exports.updateTask = async (req, res) => {
 
     res.status(200).json({ success: true, task });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
 //@route    DELETE api/tasks/:taskId
 //@desc     Delete a Task
 //@access   Private
-exports.deleteTask = async (req, res) => {
+exports.deleteTask = async (req, res, next) => {
   const taskId = req.params.taskId;
 
   try {
     const task = await Tasks.findById(taskId);
 
     if (!task)
-      return res.status(401).json({
-        success: false,
-        message: "Todo cannot be found.",
-      });
+      return next(
+        new ErrorResponse(`Cannot find task with ID of ${taskId}.`, 404)
+      );
 
     if (task.user.toString() !== req.user._id.toString())
-      return res.status(401).json({
-        success: false,
-        message: "You are not allowed to delete this todo.",
-      });
+      return next(
+        new ErrorResponse(
+          `You are not allowed to delete this task with ID of ${taskId}.`,
+          401
+        )
+      );
 
     await task.remove();
 
     res.status(200).json({ success: true, task: [] });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };

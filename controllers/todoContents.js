@@ -1,5 +1,6 @@
 const TodoContents = require("../models/TodoContents");
 const Todos = require("../models/Todos");
+const ErrorResponse = require("../utils/errorResponse");
 
 //@route    POST /api/todo/:todoId/todo-contents
 //@desc     Get a all contents of todo
@@ -11,14 +12,9 @@ exports.getTodoContents = async (req, res, next) => {
       todo: todoId,
     });
 
-    if (!contents)
-      return res
-        .status(404)
-        .json({ success: false, message: "No content found for this todo." });
-
     res.status(200).json({ success: true, contents, count: contents.length });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
@@ -39,12 +35,10 @@ exports.createTodoContent = async (req, res, next) => {
     req.body.photos = photos;
   }
 
-  if (!photos && !description) {
-    return res.status(400).json({
-      success: false,
-      message: "Please add a description and/or a photo",
-    });
-  }
+  if (!photos && !description)
+    return next(
+      new ErrorResponse(`Please add a description and/or a photo`, 400)
+    );
 
   try {
     const todo = await Todos.findById(todoId);
@@ -58,7 +52,7 @@ exports.createTodoContent = async (req, res, next) => {
 
     res.status(200).json({ success: true, contents });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
@@ -72,17 +66,19 @@ exports.updateTodoContent = async (req, res, next) => {
     let todoContent = await TodoContents.findById(todoContentId);
 
     if (!todoContent)
-      return res.status(401).json({
-        success: false,
-        message: "Content cannot be found.",
-      });
+      return next(
+        new ErrorResponse(
+          `Content with ID of ${todoContentId} cannot be found.`,
+          404
+        )
+      );
 
-    if (todoContent.user.toString() !== req.user._id.toString())
+    /*    if (todoContent.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to Update this content.",
       });
-
+ */
     todoContent = await TodoContents.findByIdAndUpdate(
       todoContentId,
       req.body,
@@ -94,40 +90,37 @@ exports.updateTodoContent = async (req, res, next) => {
 
     res.status(200).json({ success: true, todoContent });
   } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, message: "Failed to update new Content." });
+    next(err);
   }
 };
 
 //@route    PUT /api/todo-contents/:todoContentId
 //@desc     Delete a todo
 //@access   Private
-exports.deleteTodoContent = async (req, res) => {
+exports.deleteTodoContent = async (req, res, next) => {
   const todoContentId = req.params.todoContentId;
 
   try {
     const todoContent = await TodoContents.findById(todoContentId);
 
     if (!todoContent)
-      return res.status(401).json({
-        success: false,
-        message: "Content cannot be found.",
-      });
+      return next(
+        new ErrorResponse(
+          `Content with ID of ${todoContentId} cannot be found.`,
+          404
+        )
+      );
 
     if (todoContent.user.toString() !== req.user._id.toString())
-      return res.status(401).json({
-        success: false,
-        message: "You are not allowed to delete this content.",
-      });
+      return next(
+        new ErrorResponse(`You are not allowed to delete this content.`, 401)
+      );
 
     await todoContent.remove();
 
     res.status(200).json({ success: true, todo: [] });
   } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, message: "Failed to delete this content." });
+    next(err);
   }
 };
 
@@ -266,35 +259,30 @@ exports.addContentPhoto = async (req, res, next) => {
 
   req.body.photos = photos;
 
-  if (!photos) {
-    return res.status(400).json({
-      success: false,
-      message: "Please add a description and/or a photo",
-    });
-  }
+  if (!photos) return next(new ErrorResponse(`Please a photo`, 400));
 
   try {
     let todoContent = await TodoContents.findById(todoContentId);
 
     if (!todoContent)
-      return res.status(401).json({
-        success: false,
-        message: "Content cannot be found.",
-      });
+      return next(
+        new ErrorResponse(
+          `Content with ID of ${todoContentId} cannot be found.`,
+          404
+        )
+      );
 
-    if (todoContent.user.toString() !== req.user._id.toString())
+    /*     if (todoContent.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to add a content photo.",
-      });
+      }); */
 
     todoContent = await todoContent.addPhotos(req.body.photos);
 
     res.status(200).json({ success: true, todoContent });
   } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, message: "Failed to add content photo." });
+    next(err);
   }
 };
 
@@ -311,34 +299,32 @@ exports.deleteContentPhoto = async (req, res, next) => {
     let todoContent = await TodoContents.findById(todoContentId);
 
     if (!todoContent)
-      return res.status(401).json({
-        success: false,
-        message: "Content cannot be found.",
-      });
+      return next(
+        new ErrorResponse(
+          `Content with ID of ${todoContentId} cannot be found.`,
+          404
+        )
+      );
 
-    if (todoContent.user.toString() !== req.user._id.toString())
+    /*     if (todoContent.user.toString() !== req.user._id.toString())
       return res.status(401).json({
         success: false,
         message: "You are not allowed to delete a content photo.",
-      });
+      }); */
 
     const photo = todoContent.photos.find(
       (photo) => photo._id.toString() === photoId.toString()
     );
 
-    if (!photo) {
-      return res.status(401).json({
-        success: false,
-        message: `Photo with id of ${photoId} cannot be found.`,
-      });
-    }
+    if (!photo)
+      return next(
+        new ErrorResponse(`Photo with id of ${photoId} cannot be found.`, 404)
+      );
 
     todoContent = await todoContent.deletePhoto(photoId);
 
     res.status(200).json({ success: true, todoContent });
   } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, message: "Failed to delete content photo." });
+    next(err);
   }
 };

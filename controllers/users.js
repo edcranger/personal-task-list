@@ -2,48 +2,48 @@ const { validationResult } = require("express-validator");
 const User = require("../models/Users");
 const { nanoid } = require("nanoid");
 const ObjectId = require("mongoose").Types.ObjectId;
-const e = require("express");
+const ErrorResponse = require("../utils/errorResponse");
 
 //@route    GET api/users
 //@desc     Get logged in  user
 //@access   Private
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user);
+
     res.status(200).json({ success: true, user });
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
 //@route    POST api/users
 //@desc     POST logged in  user
 //@access   Private
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ message: errors.array() });
   }
+
   try {
     let user = await User.findOne({ email }).select("+password");
 
-    if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+    if (!user) return next(new ErrorResponse("Invalid credentials", 401));
 
     const passwordMatch = await user.isPasswordMatch(password);
 
-    if (!passwordMatch) {
-      return res.status(400).json({ message: "Invalid Credentials" });
-    }
+    if (!passwordMatch)
+      return next(new ErrorResponse(`Password does not match.`, 401));
 
     user.password = null;
 
     sendTokenResponse(user, 200, res);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server Error" });
+    next(err);
   }
 };
 
@@ -62,7 +62,8 @@ exports.register = async (req, res, next) => {
   try {
     let user = await User.findOne({ email });
 
-    if (user) return res.status(400).json({ message: "User already exist" });
+    if (user)
+      return next(new ErrorResponse(`Email address already used.`, 400));
 
     user = await User.create({
       full_name,
@@ -72,7 +73,7 @@ exports.register = async (req, res, next) => {
 
     sendTokenResponse(user, 200, res);
   } catch (err) {
-    return next(err);
+    next(err);
   }
 };
 
@@ -92,7 +93,7 @@ exports.searchUser = async (req, res, next) => {
 
     res.status(200).json({ success: true, user });
   } catch (err) {
-    return next(err);
+    next(err);
   }
 };
 
@@ -107,7 +108,7 @@ const sendTokenResponse = async (user, statusCode, res) => {
     ),
     httpOnly: false,
     sameSite: "None",
-    secure: true,
+    secure: process.env.NODE_ENV === "server" ? false : true,
   };
 
   const csrfTokenOption = {
@@ -116,7 +117,7 @@ const sendTokenResponse = async (user, statusCode, res) => {
     ),
     httpOnly: false,
     sameSite: "Strict",
-    secure: true,
+    secure: process.env.NODE_ENV === "server" ? false : true,
   };
 
   res

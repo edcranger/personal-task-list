@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const { check } = require("express-validator");
 const { protect } = require("../middleware/auth");
 
 const {
@@ -20,6 +20,18 @@ router.use("/:taskId/contributors", contributorsRouter);
 
 router.route("/:taskId").put(protect, updateTask).delete(protect, deleteTask);
 
-router.route("/").get(protect, getUsersTasks).post(protect, createTask);
+router
+  .route("/")
+  .get(protect, getUsersTasks)
+  .post(
+    [
+      check("taskTitle", "Please add a title.").not().isEmpty(),
+      check("description", "Please add a description.").not().isEmpty(),
+      check("category", "Please add a description.").not().isEmpty(),
+      check("taskType", "Please add a type.").not().isEmpty(),
+    ],
+    protect,
+    createTask
+  );
 
 module.exports = router;

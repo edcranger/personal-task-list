@@ -11,8 +11,10 @@ exports.protect = async (req, res, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
-    if (decoded.xsrfToken !== req.headers["x-xsrf-token"]) {
-      return res.json({ success: false, message: "you are not authorized" });
+    if (process.env.NODE_ENV !== "server") {
+      if (decoded.xsrfToken !== req.headers["x-xsrf-token"]) {
+        return res.json({ success: false, message: "you are not authorized" });
+      }
     }
 
     const user = await User.findById(decoded.id);

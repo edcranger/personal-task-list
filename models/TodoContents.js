@@ -1,7 +1,7 @@
 const e = require("express");
 const mongoose = require("mongoose");
 
-const TodoContentSchema = mongoose.Schema({
+const TodoContentSchema = new mongoose.Schema({
   todo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Todo",
@@ -33,7 +33,7 @@ const TodoContentSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },

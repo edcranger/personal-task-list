@@ -13,7 +13,7 @@
 
 ==========================Priority=========================
 1.Create a endpoint in searching members. 
-
+2.Error popups
 
 
 
@@ -29,32 +29,18 @@
  
 
 
-------Task contributor function-------
-Problems: 
-     1. How to add someone to the task? - done
-    -soln:
-        Done - 1. Create a contributors model Contributors: [{contributorId,    status: ('invited', 'accepted', declined, retired), dateInvited, dateAccepted, dateRetired}] 
-
-     2. How to reflect that to user that he was invited to the task? - done
-    -soln: 
-        1. Create an endpoint /api/getInvites/ 
-    
-
-    3. How to accept or not accept task by someon - done
-    Done - Accepting
-    DOne -  Decline
-
-    4. How show all contributors of task - done
-    -soln: populate with users that has a status of contributors.status === accepted
-
-    5. How to show all assigned tasks of users - done
-    - after fetching all user created task, query all task where he is a contributor then mix it in one array? or separate it  by creating a personal task and group task?
-
-    [...{personal task}, ...{assigned task}] i think separating is much better. 
-    [...{assigned task}], [...{personal task}]
-
-6. Create function that allow contributors to update the task(authentication).
-    soln: this will a middleware
+-------Notification------------------
+interactions: {
+    seenBy: []
+    clickedBy: [],
+    logs: [
+            {
+                logType: { type:String,}, 
+                data: {type: String},
+                date: {type: Date, default: Date.now}    
+            }
+        ]
+}
     
 
 

@@ -1,6 +1,9 @@
 const Contributors = require("../models/Contributors");
+const ObjectId = require("mongoose").Types.ObjectId;
+const User = require("../models/Users");
 const Tasks = require("../models/Tasks");
 const { validationResult } = require("express-validator");
+const ErrorResponse = require("../utils/errorResponse");
 
 //@route    POST api/tasks/:taskId/contributors
 //@desc     Delete a Task
@@ -8,6 +11,7 @@ const { validationResult } = require("express-validator");
 exports.addContributor = async (req, res, next) => {
   const taskId = req.params.taskId;
   const { contributorId } = req.body;
+
   const userId = req.user._id;
 
   const errors = validationResult(req);
@@ -18,22 +22,7 @@ exports.addContributor = async (req, res, next) => {
 
   try {
     const task = await Tasks.findById(taskId);
-    /* 
-    let contributor = await Contributors.findOne({
-      task: taskId,
-      contributor: userId,
-      status: "accepted",
-    }); */
 
-    //need to fix: if the contributor  already had accepted the task then retrun not to create
-    /* 
-    if (task.user.toString() !== userId.toString() && !contributor)
-      return res.status(401).json({
-        success: false,
-        message: "You are not allowed to add a contributor.",
-      }); */
-
-    //find if
     const alreadyInvited = await Contributors.findOne({
       task: taskId,
       contributor: contributorId,
@@ -41,16 +30,14 @@ exports.addContributor = async (req, res, next) => {
 
     if (alreadyInvited) {
       if (alreadyInvited.status === "pending")
-        return res.status(400).json({
-          success: false,
-          message: "Member already has a pending invite.",
-        });
+        return next(
+          new ErrorResponse(`Member already has a pending invite.`, 400)
+        );
 
       if (alreadyInvited.status === "accepted")
-        return res.status(400).json({
-          success: false,
-          message: "Member is already a contributor.",
-        });
+        return next(
+          new ErrorResponse(`"Member is already a contributor.`, 400)
+        );
     }
 
     const contributor = await Contributors.create({
@@ -62,9 +49,7 @@ exports.addContributor = async (req, res, next) => {
 
     res.status(200).json({ success: true, contributor });
   } catch (err) {
-    res
-      .status(400)
-      .json({ success: false, message: "Failed to add contributor" });
+    next(err);
   }
 };
 
@@ -78,31 +63,27 @@ exports.cancelAddContributor = async (req, res, next) => {
   try {
     const contributor = await Contributors.findById(contributorId);
 
-    if (!contributor) {
-      return res.status(401).json({
-        success: false,
-        message: `No contributor with id of ${contributorId} found.`,
-      });
-    }
+    if (!contributor)
+      return next(
+        new ErrorResponse(
+          `No contributor with id of ${contributorId} found.`,
+          400
+        )
+      );
 
     if (
       contributor.addedBy.toString() !== userId.toString() ||
       contributor.taskOwner.toString() !== userId.toString()
-    ) {
-      return res.status(401).json({
-        success: false,
-        message: "You are not allowed to remove.",
-      });
-    }
+    )
+      return next(
+        new ErrorResponse(`You are not allowed to cancel the invite.`, 401)
+      );
 
     await contributor.remove();
 
     res.status(200).json({ success: true, contributor: [] });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to remove.",
-    });
+    next(err);
   }
 };
 
@@ -115,17 +96,21 @@ exports.getInvites = async (req, res, next) => {
   try {
     const contributor = await Contributors.find({
       contributor: userId,
-      status: "pending",
-    }).populate("task");
+    })
+      .populate([
+        { path: "addedBy", select: "full_name" },
+        {
+          path: "task",
+          select: "taskTitle status",
+        },
+      ])
+      .sort("-createdAt");
 
     res
       .status(200)
       .json({ success: true, invites: contributor, count: contributor.length });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to cancel contributor invite.",
-    });
+    next(err);
   }
 };
 
@@ -139,19 +124,18 @@ exports.acceptInvite = async (req, res, next) => {
   try {
     let contributor = await Contributors.findById(contributorId);
 
-    if (!contributor) {
-      return res.status(400).json({
-        success: false,
-        message: `No invite with ID of ${contributorId} found.`,
-      });
-    }
+    if (!contributor)
+      return next(
+        new ErrorResponse(
+          `No contributor with id of ${contributorId} found.`,
+          400
+        )
+      );
 
-    if (contributor.contributor.toString() !== userId.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: `You are not allowed to accept this invite.`,
-      });
-    }
+    if (contributor.contributor.toString() !== userId.toString())
+      return next(
+        new ErrorResponse(`You are not allowed to accept this invite.`, 401)
+      );
 
     contributor = await Contributors.findByIdAndUpdate(
       contributorId,
@@ -163,10 +147,7 @@ exports.acceptInvite = async (req, res, next) => {
       .status(200)
       .json({ success: true, invites: contributor, count: contributor.length });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to accept contributor invite.",
-    });
+    next(err);
   }
 };
 
@@ -180,19 +161,18 @@ exports.declineInvite = async (req, res, next) => {
   try {
     let contributor = await Contributors.findById(contributorId);
 
-    if (!contributor) {
-      return res.status(400).json({
-        success: false,
-        message: `No invite with ID of ${contributorId} found.`,
-      });
-    }
+    if (!contributor)
+      return next(
+        new ErrorResponse(
+          `No contributor with id of ${contributorId} found.`,
+          400
+        )
+      );
 
-    if (contributor.contributor.toString() !== userId.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: `You are not allowed to decline this invite.`,
-      });
-    }
+    if (contributor.contributor.toString() !== userId.toString())
+      return next(
+        new ErrorResponse(`You are not allowed to decline this invite.`, 401)
+      );
 
     contributor = await Contributors.findByIdAndUpdate(
       contributorId,
@@ -204,10 +184,7 @@ exports.declineInvite = async (req, res, next) => {
       .status(200)
       .json({ success: true, invites: contributor, count: contributor.length });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to decline contributor invite.",
-    });
+    next(err);
   }
 };
 
@@ -229,9 +206,75 @@ exports.getAssignedTasks = async (req, res, next) => {
       count: contributor.length,
     });
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: "Failed to get all assigned tasks.",
-    });
+    next(err);
   }
 };
+
+//@route    GET api/contributors/getInvites
+//@desc     get all task invites of user
+//@access   Private
+exports.searchContributor = async (req, res, next) => {
+  const { taskId, contributorId } = req.params;
+
+  let users = [];
+
+  try {
+    const task = await Tasks.findById(taskId);
+
+    if (!ObjectId.isValid(contributorId)) {
+      users = await User.find({
+        full_name: { $regex: contributorId, $options: "i" },
+      }).populate("assignedTasks");
+    } else {
+      users = await User.find({ _id: contributorId }).populate("assignedTasks");
+    }
+
+    const newUser = users
+      .map((user) => {
+        return {
+          _id: user._id,
+          full_name: user.full_name,
+          status: user.assignedTasks.find(
+            (task) => task.task.toString() === taskId
+          )
+            ? user.assignedTasks.find((task) => task.task.toString() === taskId)
+                .status
+            : "not invited",
+        };
+      })
+      .filter((user) => user._id.toString() !== task.user.toString());
+
+    res.status(200).json({
+      success: true,
+      users: newUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/* exports.getAcceptedNotication = async () => {
+  const userId = req.user._id;
+
+  try {
+    const contributor = await Contributors.find({
+      addedBy: userId,
+      status: "accepted",
+    })
+      .populate([
+        { path: "addedBy", select: "full_name" },
+        {
+          path: "task",
+          select: "taskTitle status",
+        },
+      ])
+      .sort("-dateAccepted");
+
+    res
+      .status(200)
+      .json({ success: true, invites: contributor, count: contributor.length });
+  } catch (err) {
+    next(err);
+  }
+};
+ */

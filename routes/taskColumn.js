@@ -1,5 +1,4 @@
 const router = require("express").Router({ mergeParams: true });
-const { check } = require("express-validator");
 const { protect } = require("../middleware/auth");
 const { gateKeeper } = require("../middleware/gatekeeper");
 
@@ -25,11 +24,6 @@ router.route("/admin-allColumns").get(protect, adminGetTaskColumns);
 router
   .route("/")
   .get(protect, gateKeeper("taskId"), getTaskColumns)
-  .post(
-    [check("columnName", "Please enter a title.").not().isEmpty()],
-    protect,
-    gateKeeper("taskId"),
-    createTaskColumn
-  );
+  .post(protect, gateKeeper("taskId"), createTaskColumn);
 
 module.exports = router;

@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const chalk = require("chalk");
+const errorHandler = require("./middleware/error");
 
 const app = express();
 
@@ -64,6 +65,8 @@ const taskColumns = require("./routes/taskColumn");
 const todos = require("./routes/todos");
 const todoContents = require("./routes/todoContents");
 const contributors = require("./routes/contributors");
+const notifications = require("./routes/notifications");
+const comments = require("./routes/comments");
 
 //Mount Routes
 app.use("/api/users", users);
@@ -72,6 +75,10 @@ app.use("/api/task-column", taskColumns);
 app.use("/api/todos", todos);
 app.use("/api/todo-contents", todoContents);
 app.use("/api/contributors", contributors);
+app.use("/api/notifications", notifications);
+app.use("/api/comments", comments);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

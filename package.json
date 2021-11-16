@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
+    "api": "cross-env Node_ENV=server nodemon server.js",
     "client": "npm start --prefix client",
     "clientinstall": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.2.1",
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.12"
   }
 }

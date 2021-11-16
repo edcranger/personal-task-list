@@ -13,13 +13,31 @@ exports.gateKeeper = (type) => {
       let task = null;
 
       if (type === "taskId") {
-        task = await Tasks.findById(taskId);
+        console.log("taskId");
+        const res = await Tasks.findById(taskId);
+        task = res;
       } else if (type === "taskColumnId") {
-        task = await TaskColumns.findById(taskColumnId);
+        console.log("taskColumnId");
+        const res = await TaskColumns.findById(taskColumnId).populate({
+          path: "task",
+          select: "user",
+        });
+        task = res.task;
       } else if (type === "todoId") {
-        task = await Todos.findById(todoId);
+        console.log("todoId");
+        const res = await Todos.findById(todoId).populate({
+          path: "task",
+          select: "user",
+        });
+
+        task = res.task;
       } else if (type === "todoContentId") {
-        task = await TodoContents.findById(todoContentId);
+        console.log("todoContentId");
+        const res = await TodoContents.findById(todoContentId).populate({
+          path: "task",
+          select: "user",
+        });
+        task = res.task;
       } else {
         task = null;
       }
@@ -29,9 +47,8 @@ exports.gateKeeper = (type) => {
           success: false,
           message: "Failed to access this route, please verify access.",
         });
-
       const contributor = await Contributors.findOne({
-        task,
+        task: task._id,
         contributor: userId,
         status: "accepted",
       });

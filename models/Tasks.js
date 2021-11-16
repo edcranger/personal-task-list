@@ -1,24 +1,31 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const TaskSchema = mongoose.Schema(
+const TaskSchema = new Schema(
   {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
     taskTitle: {
       type: String,
       maxLength: [30, "Content cannot be more than 30 characters."],
+      required: [true, "Please enter a task title."],
       unique: true,
     },
     description: {
       type: String,
+      required: [true, "Please enter a description."],
       maxLength: [500, "Description cannot be more than 500 characters."],
     },
     status: {
       type: String,
       enum: ["pending", "inprogress ", "completed"],
       default: "pending",
+    },
+    category: {
+      type: String,
+      required: [true, "Please enter a category."],
+      maxLength: [15, "category name cannot be more than 15 characters."],
     },
     completed: {
       type: Boolean,
@@ -28,8 +35,9 @@ const TaskSchema = mongoose.Schema(
       type: String,
       enum: ["personal", "group"],
       required: [true, "Please add a task type"],
+      lowercase: true,
     },
-    date: {
+    createdAt: {
       type: Date,
       default: Date.now,
     },
@@ -64,4 +72,4 @@ TaskSchema.virtual("contributors", {
   justOne: false,
 });
 
-module.exports = mongoose.model("Task", TaskSchema);
+module.exports = model("Task", TaskSchema);

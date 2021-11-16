@@ -1,19 +1,23 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const TaskColumnSchema = mongoose.Schema(
+const TaskColumnSchema = new Schema(
   {
     task: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Task",
       required: [true],
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
     columnName: {
       type: String,
       required: [true, "Please enter a task column name"],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   {
@@ -29,4 +33,4 @@ TaskColumnSchema.virtual("todos", {
   justOne: false,
 });
 
-module.exports = mongoose.model("Task-Column", TaskColumnSchema);
+module.exports = model("Task-Column", TaskColumnSchema);

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Menu = styled.div`
   position: absolute;
   min-width: 200px;
-  width: 100%;
+  width: auto;
   display: ${({ showMenu }) => (showMenu ? "flex" : "none")};
   flex-direction: column;
   background: ${({ background }) =>
@@ -22,7 +22,7 @@ export const MenuItem = styled.div`
   padding: 10px 10px;
   justify-content: center;
   align-items: center;
-  width: auto;
+  width: ${({ width }) => (width ? width : "auto")};
   transition: 0.3s ease-in-out;
   text-align: start;
 
@@ -30,4 +30,11 @@ export const MenuItem = styled.div`
     background: var(--warning);
     cursor: pointer;
   }
+`;
+
+export const MenuHeaders = styled.h5`
+  margin: 0;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : "1rem")};
+  padding: 5px;
+  text-align: left;
 `;

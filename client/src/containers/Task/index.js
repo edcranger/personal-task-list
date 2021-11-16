@@ -12,11 +12,13 @@ import {
   SideSection,
   MainSection,
   SearchUserWrapper,
+  Item,
+  ContributorName,
 } from "./TaskElements";
 
 //context
 import TaskColumnContext from "../../context/taskColumn/taskColumnContext";
-import AuthContext from "../../context/auth/authContext";
+import ContributorContext from "../../context/contributors/contributorContext";
 
 //components
 import TaskColumn from "../../components/TaskColumn";
@@ -26,6 +28,7 @@ import Input from "../../components/Forms/Input";
 import Button from "../../components/Button";
 import Collapse from "../../components/Collapse";
 import Avatar from "../../components/Avatar";
+import UserList from "../../components/UserList";
 
 //hooks
 import useDebounce from "../../Hooks/useDebounce";
@@ -41,12 +44,10 @@ const Task = () => {
   const [columnName, setColumnName] = useState("");
   const [error, setError] = useState("");
   const [contentType, setContentType] = useState("");
-
-  const { taskId } = useParams();
-
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState("a");
 
   const text = useRef("");
+  const { taskId } = useParams();
 
   const {
     currentTaskColumns,
@@ -55,17 +56,19 @@ const Task = () => {
     updateTaskColumn,
     deleteTaskColumn,
     updateAllTaskColumns,
+    clearColumns,
   } = useContext(TaskColumnContext);
 
-  const { searchUser, searchedUser } = useContext(AuthContext);
+  const { searchContributor, clearContributors, searched } =
+    useContext(ContributorContext);
 
   const submitAddTaskColumn = (e) => {
     setError("");
     e.preventDefault();
 
-    if (!columnName) {
+    /*     if (!columnName) {
       return setError("Task column field is empty");
-    }
+    } */
 
     const newColumm = {
       columnName: columnName,
@@ -84,6 +87,7 @@ const Task = () => {
     if (type !== "add") {
       setTaskColumn(col);
     }
+    clearContributors();
     setContentType(type);
     setShowModal(true);
     setSearchText("");
@@ -108,7 +112,9 @@ const Task = () => {
       : setSearchText("");
   };
 
-  useDebounce(() => searchUser(searchText), 1000, [searchText]);
+  useDebounce(() => searchContributor({ taskId, searchText }), 1000, [
+    searchText,
+  ]);
 
   const onUpdateSubmit = (e) => {
     e.preventDefault();
@@ -122,12 +128,14 @@ const Task = () => {
 
   useEffect(() => {
     getAllColumns(taskId);
-
     return () => {
       setShowModal(false);
       setContentType("");
+      clearColumns();
     };
   }, [taskId, getAllColumns]);
+
+  useEffect(() => {}, []);
 
   return (
     <Wrapper>
@@ -150,8 +158,14 @@ const Task = () => {
             <AiOutlineUsergroupAdd size="20" corners="20" />
             Add Contributor
           </Button>
-          <Avatar name="Edison Ocampo" />
-          <Avatar name="Mae Anne Tribunal" />
+          <Item>
+            <Avatar name="Edison Ocampo" />{" "}
+            <ContributorName>Edison Ocampo</ContributorName>
+          </Item>
+          <Item>
+            <Avatar name="Mae Anne Tribunal" />{" "}
+            <ContributorName>Mae Anne Tribunal</ContributorName>
+          </Item>
         </Collapse>
       </SideSection>
       <MainSection>
@@ -238,10 +252,8 @@ const Task = () => {
               />
             </SearchUserWrapper>
 
-            {searchedUser
-              ? searchedUser.map((user) => (
-                  <div key={user._id}>{user.full_name}</div>
-                ))
+            {searched
+              ? searched.map((user) => <UserList key={user._id} user={user} />)
               : null}
           </div>
         )}

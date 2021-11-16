@@ -1,9 +1,5 @@
 const router = require("express").Router({ mergeParams: true });
 
-//middlewares
-const { protect } = require("../middleware/auth");
-const { gateKeeper } = require("../middleware/gatekeeper");
-
 //mount controllers
 const {
   getTodoContents,
@@ -16,6 +12,15 @@ const {
   deleteContentPhoto,
   updateContentComment,
 } = require("../controllers/todoContents");
+
+//middlewares
+const { protect } = require("../middleware/auth");
+const { gateKeeper } = require("../middleware/gatekeeper");
+
+//3rd party routes
+const commentRouter = require("./comments");
+
+router.use("/:todoContentId/comments", commentRouter);
 
 router.route("/:todoContentId/deletephoto").put(protect, deleteContentPhoto);
 

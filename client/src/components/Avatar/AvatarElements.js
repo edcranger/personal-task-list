@@ -4,7 +4,6 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: flex;
   align-items: center;
-  padding: 10px 0;
 `;
 
 export const AvatarPhoto = styled.img`
@@ -24,10 +23,4 @@ export const AvatarLetter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const AvatarName = styled.h1`
-  font-size: var(--fontSmall);
-  color: var(--darkgrey);
-  margin-left: 20px;
 `;

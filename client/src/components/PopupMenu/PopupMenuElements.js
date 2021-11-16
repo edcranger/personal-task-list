@@ -11,7 +11,7 @@ export const TaskColumnMenu = styled.div`
   top: 20px;
   left: 10px;
   width: 150px;
-  background: var(--lightGrey);
+  background: var(--white);
   transition: all 0.3s ease-in-out;
   z-index: 100;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

@@ -1,21 +1,22 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const ContributorSchema = mongoose.Schema({
+const ContributorSchema = new Schema({
   addedBy: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
   taskOwner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: [true, "Please enter task owner"],
   },
   task: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Task",
   },
   contributor: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: [true, "Must include coontributor ID."],
   },
   status: {
@@ -36,10 +37,10 @@ const ContributorSchema = mongoose.Schema({
   dateRetired: {
     type: Date,
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Contributor", ContributorSchema);
+module.exports = model("Contributor", ContributorSchema);

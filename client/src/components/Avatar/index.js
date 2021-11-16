@@ -2,12 +2,7 @@ import React from "react";
 import Photo from "../../images/default-profile.png";
 
 //styles
-import {
-  Wrapper,
-  AvatarPhoto,
-  AvatarName,
-  AvatarLetter,
-} from "./AvatarElements";
+import { Wrapper, AvatarPhoto, AvatarLetter } from "./AvatarElements";
 
 const Avatar = ({ src, name }) => {
   return (
@@ -17,8 +12,6 @@ const Avatar = ({ src, name }) => {
       ) : (
         <AvatarLetter>{name.charAt(0).toUpperCase()}</AvatarLetter>
       )}
-
-      <AvatarName>{name}</AvatarName>
     </Wrapper>
   );
 };

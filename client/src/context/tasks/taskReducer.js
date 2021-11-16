@@ -10,6 +10,7 @@ import {
   SET_IS_EDITING,
   FILTER_TASKS,
   CLEAR_FILTER_TASKS,
+  SET_TASK_ERROR,
 } from "../types";
 
 const taskReducer = (state, action) => {
@@ -83,6 +84,8 @@ const taskReducer = (state, action) => {
     case SET_LOADING: {
       return { ...state, loading: true };
     }
+    case SET_TASK_ERROR:
+      return { ...state, error: action.payload, loading: false };
     default:
       return state;
   }

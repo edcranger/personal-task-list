@@ -6,6 +6,7 @@ import {
   DELETE_TASKCOLUMN,
   SET_TASKCOLUMN_ERROR,
   SET_LOADING,
+  CLEAR_TASKCOLUMNS,
 } from "../types";
 
 const taskReducer = (state, action) => {
@@ -57,7 +58,8 @@ const taskReducer = (state, action) => {
 
     case SET_LOADING:
       return { ...state, loading: true };
-
+    case CLEAR_TASKCOLUMNS:
+      return { ...state, currentTaskColumns: [], loading: false };
     default:
       return state;
   }

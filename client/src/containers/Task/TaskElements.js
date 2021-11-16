@@ -71,3 +71,15 @@ export const SearchUserWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
+export const Item = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.3rem;
+`;
+
+export const ContributorName = styled.p`
+  margin-left: 0.6rem;
+  font-size: 1rem;
+  font-weight: normal;
+`;

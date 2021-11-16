@@ -39,11 +39,7 @@ const Login = () => {
   });
 
   const submitLoginForm = async (data) => {
-    const res = await login(data);
-
-    if (res.success) {
-      /*  getAllTaskOfUser(); */
-    }
+    login(data);
   };
 
   useEffect(() => {

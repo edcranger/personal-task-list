@@ -12,6 +12,7 @@ import {
   SET_LOADING,
   SET_TASKCOLUMN_ERROR,
   UPDATE_ALL_TASKCOLUMN,
+  CLEAR_TASKCOLUMNS,
 } from "../types";
 
 //Context and reducers
@@ -156,6 +157,10 @@ const TaskColumnState = ({ children }) => {
     }
   };
 
+  const clearColumns = () => {
+    dispatch({ type: "CLEAR_TASKCOLUMNS" });
+  };
+
   return (
     <TaskColumnContext.Provider
       value={{
@@ -167,6 +172,7 @@ const TaskColumnState = ({ children }) => {
         addTodoToColumn,
         deleteTodoToColumn,
         updateAllTaskColumns,
+        clearColumns,
       }}
     >
       {children}

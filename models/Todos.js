@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const TodoSchema = mongoose.Schema({
+const TodoSchema = new Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
   task: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Task",
     required: true,
   },
   taskColumn: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Task-Column",
     required: true,
   },
   title: {
     type: String,
-    maxLength: [30, "Content cannot be more than 30 characters."],
+    maxLength: [30, "Todo title cannot be more than 30 characters."],
   },
   status: {
     type: String,
@@ -28,14 +28,14 @@ const TodoSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   columnIndex: {
     type: Number,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model("Todo", TodoSchema);
+module.exports = model("Todo", TodoSchema);

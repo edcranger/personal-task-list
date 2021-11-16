@@ -46,7 +46,7 @@ export const NavbarLogoIcon = styled(BiTask)`
 export const MenuIcon = styled.div`
   display: none;
 
-  @media screen and (max-width: 640px) {
+  /*   @media screen and (max-width: 640px) {
     display: block;
     position: absolute;
     top: 0;
@@ -54,7 +54,7 @@ export const MenuIcon = styled.div`
     transform: translate(-100%, 60%);
     font-size: 1.8rem;
     cursor: pointer;
-  }
+  } */
 `;
 
 export const NavMenu = styled.ul`
@@ -65,7 +65,7 @@ export const NavMenu = styled.ul`
   text-align: center;
   padding: 0;
 
-  @media screen and (max-width: 640px) {
+  /*   @media screen and (max-width: 640px) {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -76,15 +76,15 @@ export const NavMenu = styled.ul`
     transition: all 0.5s ease;
     height: 90vh;
     ${({ active }) =>
-      active &&
-      css`
-        background: #242222;
-        left: 0;
-        opacity: 1;
-        transition: all 0.5s ease;
-        z-index: 1;
-      `}
-  }
+    active &&
+    css`
+      background: #242222;
+      left: 0;
+      opacity: 1;
+      transition: all 0.5s ease;
+      z-index: 1;
+    `}
+  } */
 `;
 
 export const NavItem = styled.li`
@@ -92,7 +92,18 @@ export const NavItem = styled.li`
   position: relative;
 `;
 
-export const NavButton = styled.button`
+export const NotificationNumber = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 15px;
+  width: 25px;
+  padding: 2px;
+  font-size: 15px;
+  border-radius: 50%;
+  background: var(--danger);
+`;
+
+export const NavButton = styled.div`
   color: var(--white);
   display: flex;
   align-items: center;
@@ -101,16 +112,31 @@ export const NavButton = styled.button`
   font-size: var(--fontMed);
   padding: 0.5rem 1rem;
   width: 100%;
-  background: transparent;
-  outline: none;
-  border: none;
 
   :hover {
     color: #006bb3;
     transition: all 0.3s ease-in;
     border-bottom: 4px solid #006bb3;
-    cursor: pointer;
   }
+
+  /*   @media screen and (max-width: 640px) {
+    text-align: center;
+    padding: 2rem;
+    max-width: 100%;
+    width: 100%;
+    display: table;
+
+    .navIcon {
+      display: none;
+    }
+
+    :hover {
+      background-color: #fff;
+      color: #242424;
+      border-radius: 0;
+      border-bottom: none;
+    }
+  } */
 `;
 
 export const NavLink = styled(Link)`
@@ -129,7 +155,7 @@ export const NavLink = styled(Link)`
     border-bottom: 4px solid #006bb3;
   }
 
-  @media screen and (max-width: 640px) {
+  /*   @media screen and (max-width: 640px) {
     text-align: center;
     padding: 2rem;
     max-width: 100%;
@@ -146,13 +172,13 @@ export const NavLink = styled(Link)`
       border-radius: 0;
       border-bottom: none;
     }
-  }
+  } */
 `;
 
 export const NavMobileLink = styled.div`
   display: none;
 
-  @media screen and (max-width: 640px) {
+  /*   @media screen and (max-width: 640px) {
     display: inline;
-  }
+  } */
 `;
