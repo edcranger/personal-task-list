@@ -1,38 +1,17 @@
 import React from "react";
+import Avatar from "../Avatar";
 
 //import styles
-import { TodoContentWrapper, TodoStatus, TodoContents } from "./TodoElements";
+import { TodoContentWrapper } from "./TodoElements";
 
-import { Button } from "../PageLayout/UtilStyles";
+//components
 
-const TodoContent = ({ todo, handleDelete, setShowModal }) => {
-  const deleteFxn = () => {
-    handleDelete(todo._id);
-    setShowModal(false);
-  };
-
+const TodoContent = ({ content }) => {
+  const { user, description } = content;
   return (
     <TodoContentWrapper>
-      <div className="contentTitle">
-        <h1>{todo.title}</h1>
-        <TodoStatus status={todo.status}>{todo.status}</TodoStatus>
-      </div>
-
-      <TodoContents>{todo.content}</TodoContents>
-
-      <div>
-        <div>Date created: {todo.date}</div>
-        <Button
-          background="var(--lightGrey)"
-          hoverFontColor="white"
-          hoverColor="var(--danger)"
-          border="none"
-          rounded="10px"
-          onClick={deleteFxn}
-        >
-          Delete
-        </Button>
-      </div>
+      <Avatar name={user.full_name} />
+      {user.full_name}
     </TodoContentWrapper>
   );
 };

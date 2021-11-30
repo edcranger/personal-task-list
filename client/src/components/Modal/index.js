@@ -21,7 +21,8 @@ const Modal = ({ title, opacity, children, showModal, setShowModal }) => {
       duration: 250,
     },
     opacity: showModal || isEditing ? 1 : 0,
-    transform: showModal || isEditing ? `translateY(0%)` : `translateY(-100%)`,
+    transform: showModal || isEditing ? `scale(1)` : `scale(0)`,
+    height: `0`,
   });
 
   const closeModal = (e) => {
@@ -44,7 +45,7 @@ const Modal = ({ title, opacity, children, showModal, setShowModal }) => {
     <>
       {showModal && (
         <Background ref={modalRef} opacity={opacity} onMouseDown={closeModal}>
-          <animated.div style={animation}>
+          <animated.div style={animation} className="wew">
             <Wrapper>
               <ModalHeader>
                 <h3>{isEditing ? "Edit Task" : title}</h3>

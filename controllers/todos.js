@@ -33,6 +33,23 @@ exports.getTodo = async (req, res, next) => {
   }
 };
 
+exports.getSingleTodo = async (req, res, next) => {
+  try {
+    const todoId = req.params.todoId;
+
+    const todo = await Todos.findById(todoId);
+
+    if (!todo)
+      return next(
+        new ErrorResponse(`todo with ID of ${todoId} cannot be found`, 404)
+      );
+
+    res.status(200).json({ success: true, todo });
+  } catch (err) {
+    next(err);
+  }
+};
+
 //@route    POST /api/task-column/taskColumnId/todos
 //@desc     Post a todo
 //@access   Private

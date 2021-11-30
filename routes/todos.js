@@ -12,6 +12,7 @@ const {
   deleteTodo,
   updateTodo,
   dragdropUpdate,
+  getSingleTodo,
 } = require("../controllers/todos");
 
 //mount 3rd party routes
@@ -25,6 +26,7 @@ router.route("/dragdrop").put(dragdropUpdate);
 
 router
   .route("/:todoId")
+  .get(protect, getSingleTodo)
   .put(protect, gateKeeper("todoId"), updateTodo)
   .delete(protect, gateKeeper("todoId"), deleteTodo);
 

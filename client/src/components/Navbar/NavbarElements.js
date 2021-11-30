@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { BiTask } from "react-icons/bi";
 
 export const Wrapper = styled.nav`
-  background: rgb(0, 153, 255);
+  background: rgba(87, 108, 201, 1);
   padding: 0 20px;
   position: sticky;
   z-index: 999;

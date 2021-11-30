@@ -146,13 +146,13 @@ const TaskColumn = ({ col, handler }) => {
         </AddTodoForm>
       )}
 
-      <Modal opacity="0.8" showModal={showModal} setShowModal={setShowModal}>
+      {/*       <Modal opacity="0.8" showModal={showModal} setShowModal={setShowModal}>
         <TodoContent
           todo={currentTodo}
           handleDelete={handleDelete}
           setShowModal={setShowModal}
         />
-      </Modal>
+      </Modal> */}
     </TaskColumnWrapper>
   );
 };

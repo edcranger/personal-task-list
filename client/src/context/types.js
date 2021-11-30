@@ -26,15 +26,9 @@ export const SHOW_MODAL = "SHOW_MODAL";
 export const SET_LOADING = "SET_LOADING";
 
 //Todos
-export const ADD_TODO = "ADD_TODO";
-export const GET_ALL_TASK_CURRENT_TASKCOLUMN =
-  "GET_ALL_TASK_CURRENT_TASKCOLUMN";
 export const GET_TODO = "GET_TODO";
-export const UPDATE_TODO = "UPDATE_TODO";
-export const DELETE_TODO = "DELETE_TODO";
-export const FILTER_TODO = "ADD_TODO";
-export const SET_CURRENT_TODO = "SET_CURRENT_TODO";
-export const CLEAR_CURRENT_TODO = "CLEAR_CURRENT_TODO";
+export const GET_TODO_CONTENTS = "GET_TODO_CONTENTS";
+export const SET_TODO_ERROR = "SET_TODO_ERROR";
 
 //auth
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";

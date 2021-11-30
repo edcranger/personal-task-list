@@ -9,18 +9,23 @@ export const Background = styled.div`
   left: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
   z-index: 1000;
 `;
 
 export const Wrapper = styled.div`
   width: auto;
-  max-width: 90vw;
+  margin-top: 10vh;
+  margin-bottom: 0;
+  max-width: 50vw;
   min-width: 50vw;
   min-height: 30vh;
   background: var(--white);
   border-radius: 10px;
   padding: 10px 20px;
+
+  @media screen and (max-width: 768px) {
+    min-width: 90vw;
+  }
 `;
 
 export const ModalHeader = styled.div`

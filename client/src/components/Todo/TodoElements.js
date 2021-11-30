@@ -21,27 +21,5 @@ export const TodoCard = styled.div`
 
 export const TodoContentWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 400px;
-
-  h1 {
-    margin: 0;
-  }
-`;
-
-const colorObject = {
-  pending: "red",
-  inprogress: "yellow",
-  completed: "green",
-};
-
-export const TodoStatus = styled.h4`
-  color: ${({ status }) => (status ? colorObject[status] : colorObject["red"])};
-  margin: 0;
-`;
-
-export const TodoContents = styled.div`
-  flex: 1;
-  padding: 20px 0px;
+  align-items: center;
 `;

@@ -1,24 +1,13 @@
-import {
-  DELETE_TODO,
-  ADD_TODO,
-  GET_ALL_TASK_CURRENT_TASKCOLUMN,
-} from "../types";
+import { GET_TODO, GET_TODO_CONTENTS, SET_TODO_ERROR } from "../types";
 
 const todosReducer = (state, action) => {
   switch (action.type) {
-    case GET_ALL_TASK_CURRENT_TASKCOLUMN:
-      return { ...state, currentTaskColumns: action.payload };
-
-    case ADD_TODO:
-      return { ...state };
-
-    case DELETE_TODO:
-      const newTaskColumns = state.currentTaskColumns.map((taskCol) =>
-        taskCol._id === action.payload._id ? action.payload : taskCol
-      );
-
-      return { ...state, currentTaskColumns: newTaskColumns };
-
+    case GET_TODO:
+      return { ...state, todo: action.payload, isLoading: false };
+    case GET_TODO_CONTENTS:
+      return { ...state, contents: action.payload.contents, isLoading: false };
+    case SET_TODO_ERROR:
+      return { ...state, error: action.payload, isLoading: false };
     default:
       return state;
   }

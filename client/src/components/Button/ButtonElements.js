@@ -6,7 +6,8 @@ export const ButtonStyle = styled.button`
   border: ${({ border }) => (border === "none" ? "none" : "1px solid black")};
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "0.9rem")};
   min-width: 5rem;
-  width: auto;
+  width: ${({ width }) => (width ? width : "auto")};
+  height: ${({ height }) => (height ? height : "auto")};
   padding: 8px;
   font-weight: bolder;
   color: ${({ fontColor }) => (fontColor ? fontColor : null)};

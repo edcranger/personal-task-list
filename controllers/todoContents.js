@@ -10,7 +10,7 @@ exports.getTodoContents = async (req, res, next) => {
   try {
     const contents = await TodoContents.find({
       todo: todoId,
-    });
+    }).populate([{ path: "user", select: "full_name" }]);
 
     res.status(200).json({ success: true, contents, count: contents.length });
   } catch (err) {
